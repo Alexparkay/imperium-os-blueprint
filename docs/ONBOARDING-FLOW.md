@@ -8,7 +8,7 @@ created: 2026-06-11
 
 # Onboarding Flow (source of truth)
 
-This is the maintainer's view of the guided onboarding. The executable version lives at `.claude/skills/start-onboarding.md`; if the two ever disagree, fix the skill to match this document, then commit both together.
+This is the maintainer's view of the guided onboarding. The executable version lives at `.claude/skills/start-onboarding/SKILL.md`; if the two ever disagree, fix the skill to match this document, then commit both together.
 
 ## Design principles
 
@@ -96,7 +96,7 @@ Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file)
 
 - **Goal:** 3-5 real weekly tasks become skills, each run once on live input.
 - **Questions:** 1 (pick from the Phase 2 task list) + up to 3 clarifiers per skill (trigger, good result, output destination).
-- **Actions:** build each skill at `.claude/skills/<kebab-name>.md` with auto-trigger description and guardrail-aware body; run it for real; fix the skill (not just the output) from the owner's reaction.
+- **Actions:** build each skill at `.claude/skills/<kebab-name>/SKILL.md` with auto-trigger description and guardrail-aware body; run it for real; fix the skill (not just the output) from the owner's reaction.
 - **Outputs:** 3-5 new skills, each with one real run behind it, each rowed into `.claude/reference/skills-routing-index.md`; client folders touched get STATUS.md stubs.
 - **Exit criteria:** owner has seen and reacted to every skill's output; `node scripts/generate-registry.js` warning list EMPTY; state + status page updated.
 

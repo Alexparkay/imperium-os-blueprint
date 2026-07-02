@@ -11,7 +11,7 @@ created: 2026-06-11
 
 After completing ANY significant deliverable (skills, code, research, content, strategies, plans, automations):
 
-**STEP 1:** Read the `quality-gate` skill (`.claude/skills/quality-gate.md`). Score EACH dimension 1-10 with genuine harshness. A 9 means "I would bet money on this." Output the full scoring table with gap analysis for every dimension below 9.
+**STEP 1:** Read the `quality-gate` skill (`.claude/skills/quality-gate/SKILL.md`). Score EACH dimension 1-10 with genuine harshness. A 9 means "I would bet money on this." Output the full scoring table with gap analysis for every dimension below 9.
 
 **STEP 2:** If average score < 9 or any dimension < 7: identify the highest-impact fixes (sorted by impact desc, effort asc). APPLY the fixes to the actual deliverable. Do not just list them.
 

@@ -2,12 +2,12 @@
 title: Registry (generated)
 type: index
 status: generated
-updated: 2026-06-11
+updated: 2026-07-02
 ---
 
 # Registry - generated from disk, do not hand-edit
 
-Regenerate: `node scripts/generate-registry.js` · Generated: 2026-06-11
+Regenerate: `node scripts/generate-registry.js` · Generated: 2026-07-02
 
 ## Skills (44 in .claude/skills/)
 

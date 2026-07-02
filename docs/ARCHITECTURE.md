@@ -24,7 +24,7 @@ Claude's behaviour is shaped by instructions loaded at three depths:
 
 **Tier 2: on-demand rules.** `.claude/rules-import/` holds detailed rules that only matter in specific situations: how to format documents, how media storage works, how to handle large files. Tier 1 contains one-line pointers; the full rule is read only when the situation comes up. This keeps every session fast without losing depth.
 
-**Tier 3: skills.** `.claude/skills/` holds the workflow library. Each skill is a markdown file with a frontmatter `description` and a stepwise body. Skills load only when triggered, which is why the OS can hold 44 workflows without slowing anything down.
+**Tier 3: skills.** `.claude/skills/` holds the workflow library. Each skill is a directory containing a `SKILL.md` with a frontmatter `description` and a stepwise body (`.claude/skills/<name>/SKILL.md`). Skills load only when triggered, which is why the OS can hold 44 workflows without slowing anything down.
 
 The tiers exist to manage one scarce resource: Claude's attention. Broad rules always loaded, deep rules loaded when relevant, workflows loaded when invoked.
 

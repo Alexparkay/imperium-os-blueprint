@@ -15,7 +15,7 @@ echo "   Routing table: .claude/rules/04-skill-routing.md + .claude/reference/re
 echo ""
 echo "4. MEMORY: Persist new information to memory/ files IMMEDIATELY. Don't wait."
 echo ""
-echo "5. CONTENT: No AI smell. Banned words: .claude/skills/voice-check.md"
+echo "5. CONTENT: No AI smell. Banned words: .claude/skills/voice-check/SKILL.md"
 echo ""
 echo "6. QUALITY: Iterate until avg 9+, no dimension < 7. See quality-gate skill."
 echo ""

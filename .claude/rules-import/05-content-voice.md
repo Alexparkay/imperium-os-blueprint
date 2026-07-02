@@ -11,7 +11,7 @@ All content generated for the owner must:
 
 - Sound like a real person, not a language model
 - Use casual, direct language. No dramatic superlatives ("unlock", "revolutionize", "game-changer")
-- Full banned-words list: `.claude/skills/voice-check.md` (single source of truth)
+- Full banned-words list: `.claude/skills/voice-check/SKILL.md` (single source of truth)
 - Anti-AI slop patterns: `.claude/rules/11-anti-ai-slop.md`
 - Include spontaneity, imperfect phrasing, personality
 - Reference `content-pipeline/voice-profile/` for the owner's voice standards (built during onboarding Phase 3)

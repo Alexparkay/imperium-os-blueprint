@@ -37,9 +37,9 @@ if [ "$SIGNALS" -ge 1 ]; then
 cat <<'EOF'
 [braindump-router] This input qualifies as a brain dump. Before responding:
 
-1. Invoke the braindump-router skill: .claude/skills/braindump-router.md
+1. Invoke the braindump-router skill: .claude/skills/braindump-router/SKILL.md
 2. Run the 5-step pipeline internally: Clean -> Extract -> Route -> Score -> Act
-3. Apply .claude/skills/wispr-corrections.md to fix voice-transcription errors
+3. Apply .claude/skills/wispr-corrections/SKILL.md to fix voice-transcription errors
 4. Execute per confidence tier (HIGH=silent, MEDIUM=preface, LOW=one question)
 5. Write audit log to .context/braindump/YYYY-MM-DD-HHMM.md
 6. Follow rule 17 (concise chat: bullets, not paragraphs) for owner-facing output

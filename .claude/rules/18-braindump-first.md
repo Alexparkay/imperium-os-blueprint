@@ -27,9 +27,9 @@ Owners talk to this OS in brain dumps: stream of consciousness, multiple topics 
 
 ## The pipeline
 
-Router lives at `.claude/skills/braindump-router.md`. It runs 5 steps:
+Router lives at `.claude/skills/braindump-router/SKILL.md`. It runs 5 steps:
 
-1. **Clean** - Apply `.claude/skills/wispr-corrections.md` to fix transcription errors
+1. **Clean** - Apply `.claude/skills/wispr-corrections/SKILL.md` to fix transcription errors
 2. **Extract** - Parse numbered intents (action, object, constraints, urgency)
 3. **Route** - Match each intent to the skill routing table (rule 04) or a direct tool
 4. **Score** - Confidence 0-100 per intent, aggregate to HIGH/MEDIUM/LOW tier
@@ -44,7 +44,7 @@ Router lives at `.claude/skills/braindump-router.md`. It runs 5 steps:
 - Never ask 3 clarifying questions at once. Pick the most likely interpretation, ask about the specific ambiguity
 - Never list 5 interpretations and make the owner choose. Be decisive
 - Always log the parsed output to `.context/braindump/<timestamp>.md` for audit
-- If the router catches a new transcription-error pattern, append it to `wispr-corrections.md`
+- If the router catches a new transcription-error pattern, append it to `wispr-corrections/SKILL.md`
 
 ## Integration with other rules
 

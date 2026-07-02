@@ -21,7 +21,7 @@ Rules live in two tiers (see `.claude/rules/INDEX.md`): always-on files in `.cla
 3. **Skills before manual work.** Project skills first, then global. Routing: rule `04` + `.claude/reference/skills-routing-index.md` + registry. Auto-trigger: quality-gate, braindump-router.
 4. **Persist immediately** to `memory/` (lowercase, always). Targets table below. Always-on: `03`.
 5. **Run commands yourself.** Never tell the owner to run a command.
-6. **Content = no AI smell.** Voice profile: `content-pipeline/voice-profile/`; banned words: `.claude/skills/voice-check.md`. Writing content → read `rules-import/05`; the owner's own voice → `rules-import/25`; warm prose register → `rules-import/15`.
+6. **Content = no AI smell.** Voice profile: `content-pipeline/voice-profile/`; banned words: `.claude/skills/voice-check/SKILL.md`. Writing content → read `rules-import/05`; the owner's own voice → `rules-import/25`; warm prose register → `rules-import/15`.
 7. **Always push after work:** `git add -A && git commit && git push origin main`. If a deploy target is configured (none by default; onboarding Phase 4 sets one if the owner deploys services), also deploy changed service code. Never leave uncommitted work. Detail: `rules-import/06`.
 8. **Google Workspace = gws CLI only** (`gws docs|sheets|drive|calendar|gmail ...`, `supportsAllDrives: true` for shared drives). MCP Google tools are deny-listed in settings. Creating a Doc → read `rules-import/09` (use `scripts/gdoc-markdown.js`, no tables in Docs). Detail: `rules-import/08`.
 9. **Quality gate before delivery** on any significant deliverable: score harshly, iterate to avg ≥9 / no dimension <7, max 3 passes. Always-on: `10`.

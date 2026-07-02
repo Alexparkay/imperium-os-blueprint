@@ -57,13 +57,19 @@ lines.push(`Regenerate: \`node scripts/generate-registry.js\` · Generated: ${no
 lines.push('');
 
 // ---- Skills ----
+// Directory format: each skill lives at .claude/skills/<name>/SKILL.md (dir name = skill name).
 const skillsDir = path.join(ROOT, '.claude', 'skills');
-const skills = mdFiles(skillsDir);
+const skills = dirEntries(skillsDir, (d, st) => !d.startsWith('_') && st.isDirectory()).sort();
 lines.push(`## Skills (${skills.length} in .claude/skills/)`);
 lines.push('');
-for (const f of skills) {
-  const name = f.replace(/\.md$/, '');
-  const desc = frontmatterField(path.join(skillsDir, f), 'description');
+for (const name of skills) {
+  const skillFile = path.join(skillsDir, name, 'SKILL.md');
+  if (!fs.existsSync(skillFile)) {
+    warnings.push(`skill ${name}: missing SKILL.md (dir exists without .claude/skills/${name}/SKILL.md)`);
+    lines.push(`- **${name}** - (missing SKILL.md)`);
+    continue;
+  }
+  const desc = frontmatterField(skillFile, 'description');
   if (!desc) warnings.push(`skill ${name}: no frontmatter description (hurts auto-trigger)`);
   lines.push(`- **${name}** - ${desc ? desc + (desc.length >= 160 ? '…' : '') : '(no description)'}`);
 }
@@ -135,7 +141,7 @@ lines.push('');
 const routingPath = path.join(ROOT, '.claude', 'reference', 'skills-routing-index.md');
 if (fs.existsSync(routingPath)) {
   const routing = fs.readFileSync(routingPath, 'utf8');
-  const missing = skills.map(f => f.replace(/\.md$/, '')).filter(n => !routing.includes(n));
+  const missing = skills.filter(n => !routing.includes(n));
   if (missing.length) {
     warnings.push(`routing index missing ${missing.length} skills: ${missing.join(', ')}`);
     lines.push(`## Drift: skills missing from skills-routing-index.md (${missing.length})`);
