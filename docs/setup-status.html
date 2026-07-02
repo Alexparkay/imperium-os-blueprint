@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperium OS · Setup</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%234cb782'/%3E%3C/svg%3E">
+<!--
+  SETUP STATUS PAGE
+  This page is updated automatically by the onboarding skill after every phase
+  and every connector. It is fully static: no scripts, no network, no tracking.
+  Open it in any browser. Refresh it to see the latest state.
+
+  Editable hooks (used by .claude/skills/start-onboarding.md):
+    body[data-complete]                  "true" reveals the completion banner
+    #overall-ring  style="--p:N"         overall progress percent (0..100)
+    #overall-pct                         text inside the ring
+    #current-focus                       one-line current activity
+    #last-updated                        date text
+    span[data-field="company-name"]      set during Phase 1
+    li.phase[data-phase] data-status     pending | current | done
+    li.phase .fill style width           0% | 50% | 100%
+    .connector[data-name] data-status    pending | connected | skipped | deferred | optional
+-->
+<style>
+  :root{
+    --bg:#0a0d10;
+    --surface:#12161c;
+    --surface-2:#171c23;
+    --line:#222a33;
+    --text:#e8e6e1;
+    --muted:#8a93a0;
+    --faint:#5a6470;
+    --accent:#4cb782;
+    --accent-soft:rgba(76,183,130,.14);
+    --gold:#c9b08f;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(1100px 520px at 85% -10%, rgba(76,183,130,.07), transparent 60%),
+      radial-gradient(900px 480px at -10% 110%, rgba(201,176,143,.05), transparent 60%);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    padding:48px 24px 64px;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  .brand{
+    font-size:11px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;
+  }
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:32px;margin:14px 0 36px;flex-wrap:wrap}
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(30px,4.5vw,42px);
+    font-weight:500;letter-spacing:-.01em;line-height:1.1;
+  }
+  .sub{color:var(--muted);font-size:15px;margin-top:10px}
+  .sub b{color:var(--text);font-weight:600}
+  .meta{color:var(--faint);font-size:12.5px;margin-top:8px}
+
+  /* ---------- progress ring ---------- */
+  .ring-block{display:flex;align-items:center;gap:18px}
+  .ring{
+    --p:0;
+    width:108px;height:108px;border-radius:50%;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%), #1c232b 0);
+    display:grid;place-items:center;
+    box-shadow:0 0 36px rgba(76,183,130,.12);
+    flex:none;
+  }
+  .ring::after{content:"";position:absolute;width:108px;height:108px;border-radius:50%;}
+  .ring .hole{
+    width:86px;height:86px;border-radius:50%;background:var(--bg);
+    display:grid;place-items:center;
+  }
+  .ring .hole span{font-size:21px;font-weight:650;font-variant-numeric:tabular-nums}
+  .ring-label{color:var(--muted);font-size:13px;line-height:1.5;max-width:140px}
+
+  /* ---------- completion banner ---------- */
+  .complete-banner{
+    display:none;
+    align-items:center;gap:14px;
+    background:linear-gradient(90deg, rgba(76,183,130,.16), rgba(76,183,130,.05));
+    border:1px solid rgba(76,183,130,.35);
+    border-radius:var(--radius);
+    padding:18px 22px;margin:0 0 28px;
+  }
+  body[data-complete="true"] .complete-banner{display:flex}
+  .complete-banner .mark{
+    width:34px;height:34px;border-radius:50%;background:var(--accent);color:#08110c;
+    display:grid;place-items:center;font-weight:700;font-size:17px;flex:none;
+  }
+  .complete-banner p{font-size:15px;color:var(--text)}
+  .complete-banner p small{display:block;color:var(--muted);margin-top:2px;font-size:13px}
+
+  /* ---------- cards ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px 26px 22px;
+  }
+  .card h2{
+    font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--faint);font-weight:600;margin-bottom:18px;
+  }
+  .grid{display:grid;grid-template-columns:1.55fr 1fr;gap:20px}
+  @media (max-width:820px){.grid{grid-template-columns:1fr}}
+
+  /* ---------- current focus ---------- */
+  .focus{
+    border-left:3px solid var(--accent);
+    background:var(--accent-soft);
+    border-radius:10px;
+    padding:14px 16px;margin-bottom:22px;
+  }
+  .focus .k{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .focus p{font-size:14.5px;color:var(--text);margin-top:5px;line-height:1.5}
+
+  /* ---------- phases ---------- */
+  ol.phases{list-style:none}
+  .phase{
+    display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:center;
+    padding:13px 12px;border-radius:11px;
+    border:1px solid transparent;
+  }
+  .phase + .phase{margin-top:4px}
+  .phase .num{
+    width:30px;height:30px;border-radius:50%;
+    border:1.5px solid var(--line);color:var(--faint);
+    display:grid;place-items:center;font-size:13px;font-weight:600;
+    font-variant-numeric:tabular-nums;
+  }
+  .phase .name{font-size:14.5px;font-weight:550;color:var(--muted)}
+  .phase .desc{font-size:12.5px;color:var(--faint);margin-top:3px;line-height:1.45}
+  .phase .track{
+    height:4px;border-radius:99px;background:#1c232b;margin-top:9px;overflow:hidden;max-width:340px;
+  }
+  .phase .fill{
+    height:100%;border-radius:99px;
+    background:linear-gradient(90deg,var(--accent),#7dd3a8);
+    transition:width .4s ease;
+  }
+  .chip{
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+    padding:5px 11px;border-radius:99px;white-space:nowrap;
+  }
+  /* pending */
+  .phase[data-status="pending"] .chip{color:var(--faint);background:#161c23;border:1px solid var(--line)}
+  .phase[data-status="pending"] .chip::before{content:"Pending"}
+  /* current */
+  .phase[data-status="current"]{
+    background:var(--surface-2);
+    border-color:rgba(76,183,130,.4);
+    box-shadow:0 0 0 1px rgba(76,183,130,.12), 0 8px 28px rgba(0,0,0,.35);
+  }
+  .phase[data-status="current"] .num{border-color:var(--accent);color:var(--accent)}
+  .phase[data-status="current"] .name{color:var(--text)}
+  .phase[data-status="current"] .chip{color:var(--accent);background:var(--accent-soft);border:1px solid rgba(76,183,130,.35)}
+  .phase[data-status="current"] .chip::before{content:"In progress"}
+  /* done */
+  .phase[data-status="done"] .num{background:var(--accent);border-color:var(--accent);color:#08110c}
+  .phase[data-status="done"] .num span{display:none}
+  .phase[data-status="done"] .num::before{content:"✓"}
+  .phase[data-status="done"] .name{color:var(--text)}
+  .phase[data-status="done"] .chip{color:#7dd3a8;background:rgba(76,183,130,.1)}
+  .phase[data-status="done"] .chip::before{content:"Done"}
+
+  /* ---------- connectors ---------- */
+  .connectors{display:grid;grid-template-columns:1fr;gap:10px}
+  .connector{
+    display:flex;align-items:center;gap:12px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:11px;padding:13px 15px;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--faint)}
+  .cinfo{flex:1;min-width:0}
+  .cname{font-size:13.5px;font-weight:600;color:var(--text)}
+  .cdesc{font-size:12px;color:var(--faint);margin-top:2px;line-height:1.4}
+  .cchip{
+    font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;
+    padding:4px 9px;border-radius:99px;white-space:nowrap;
+    color:var(--faint);background:#141a21;border:1px solid var(--line);
+  }
+  .connector[data-status="pending"]  .cchip::before{content:"Pending"}
+  .connector[data-status="optional"] .cchip::before{content:"Optional"}
+  .connector[data-status="optional"] .dot{background:#3a4350}
+  .connector[data-status="skipped"]  .cchip::before{content:"Skipped"}
+  .connector[data-status="skipped"]{opacity:.55}
+  .connector[data-status="deferred"] .cchip::before{content:"Deferred"}
+  .connector[data-status="deferred"] .cchip{color:#d9b36b;background:rgba(217,179,107,.08);border-color:rgba(217,179,107,.3)}
+  .connector[data-status="deferred"] .dot{background:#d9b36b}
+  .connector[data-status="connected"] .dot{background:var(--accent);box-shadow:0 0 10px rgba(76,183,130,.7)}
+  .connector[data-status="connected"] .cchip{color:#7dd3a8;background:rgba(76,183,130,.1);border-color:rgba(76,183,130,.3)}
+  .connector[data-status="connected"] .cchip::before{content:"Connected"}
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top:34px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+    color:var(--faint);font-size:12px;
+  }
+  footer .fbrand{letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:#6e7682}
+</style>
+</head>
+<body data-complete="false">
+<div class="wrap">
+
+  <div class="brand">Imperium OS</div>
+  <header>
+    <div>
+      <h1>Setup Progress</h1>
+      <p class="sub">Installing the operating system for <b><span data-field="company-name">your company</span></b></p>
+      <p class="meta">Last updated: <span id="last-updated">not started yet</span></p>
+    </div>
+    <div class="ring-block">
+      <div class="ring" id="overall-ring" style="--p:0">
+        <div class="hole"><span id="overall-pct">0%</span></div>
+      </div>
+      <div class="ring-label">of setup complete across 8 phases</div>
+    </div>
+  </header>
+
+  <div class="complete-banner">
+    <div class="mark">✓</div>
+    <p>Setup complete. The system is live.
+      <small>From here on, just talk to it. Anything you say gets remembered, and your skills are ready to run.</small>
+    </p>
+  </div>
+
+  <div class="focus">
+    <div class="k">Current focus</div>
+    <p id="current-focus">Waiting for the first session. Open the chat and say: "I've just installed this, let's start".</p>
+  </div>
+
+  <div class="grid">
+
+    <section class="card">
+      <h2>Phases</h2>
+      <ol class="phases">
+        <li class="phase" data-phase="0" data-status="pending">
+          <div class="num"><span>0</span></div>
+          <div>
+            <div class="name">Welcome + tour</div>
+            <div class="desc">What you have, the folders, how to talk to it.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="1" data-status="pending">
+          <div class="num"><span>1</span></div>
+          <div>
+            <div class="name">Identity</div>
+            <div class="desc">Your name, company, email, and your privacy list.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="2" data-status="pending">
+          <div class="num"><span>2</span></div>
+          <div>
+            <div class="name">Business context</div>
+            <div class="desc">A short interview: what you do, who you sell to, the lines you never cross.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="3" data-status="pending">
+          <div class="num"><span>3</span></div>
+          <div>
+            <div class="name">Voice</div>
+            <div class="desc">Writing samples, so everything drafted sounds like you.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="4" data-status="pending">
+          <div class="num"><span>4</span></div>
+          <div>
+            <div class="name">Connections</div>
+            <div class="desc">Plugging in your tools, one at a time, tested as we go.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="5" data-status="pending">
+          <div class="num"><span>5</span></div>
+          <div>
+            <div class="name">First skills</div>
+            <div class="desc">3 to 5 of your weekly tasks, automated and run for real.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="6" data-status="pending">
+          <div class="num"><span>6</span></div>
+          <div>
+            <div class="name">Cadence + memory</div>
+            <div class="desc">What runs on a schedule, and your first task board.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+        <li class="phase" data-phase="7" data-status="pending">
+          <div class="num"><span>7</span></div>
+          <div>
+            <div class="name">Health baseline + graduation</div>
+            <div class="desc">A starting score, a week-one plan, and the keys.</div>
+            <div class="track"><div class="fill" style="width:0%"></div></div>
+          </div>
+          <div class="chip"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Connections</h2>
+      <div class="connectors">
+        <div class="connector" data-name="github-backup" data-status="pending">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">GitHub backup</div>
+            <div class="cdesc">Your whole system, backed up and versioned.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="google-workspace" data-status="pending">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">Google Workspace</div>
+            <div class="cdesc">Docs, Drive, Calendar, and Gmail.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="apify-youtube" data-status="pending">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">YouTube research</div>
+            <div class="cdesc">Full transcripts from any video.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="telegram-notify" data-status="pending">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">Telegram notifications</div>
+            <div class="cdesc">Finished work finds your phone.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="dropbox-rclone" data-status="optional">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">Dropbox media</div>
+            <div class="cdesc">Big files, streamed instead of downloaded.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="mcp-servers" data-status="optional">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">MCP servers</div>
+            <div class="cdesc">Extra abilities: browser, scraping, docs.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="whatsapp-mcp" data-status="optional">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">WhatsApp</div>
+            <div class="cdesc">Search your chats and contacts.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+        <div class="connector" data-name="higgsfield" data-status="optional">
+          <div class="dot"></div>
+          <div class="cinfo">
+            <div class="cname">Image studio</div>
+            <div class="cdesc">AI images of you, for content.</div>
+          </div>
+          <div class="cchip"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="fbrand">Imperium OS · Built by Imperium Growth</div>
+    <div>This page updates itself as setup progresses. Refresh to see the latest.</div>
+    <div style="margin-top:6px"><a href="system-map.html" style="color:#8a93a0">How it all fits together → the system map</a></div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "youtube-transcripts",
+  "version": "1.0.0",
+  "description": "YouTube transcript fetching via the Apify actor (the OS's only sanctioned YouTube reader)",
+  "type": "commonjs",
+  "scripts": {
+    "transcripts": "node transcripts.js"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "dotenv": "^17.3.1"
+  }
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperium OS · System Map</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%234cb782'/%3E%3C/svg%3E">
+<!--
+  SYSTEM MAP
+  A static explainer: how the OS fits together, why it's built on a chat and a
+  folder, and what gets smarter as you use it. No scripts, no network, no
+  tracking. Companion to setup-status.html (live progress) and ARCHITECTURE.md
+  (the deeper technical read).
+-->
+<style>
+  :root{
+    --bg:#0a0d10;
+    --surface:#12161c;
+    --surface-2:#171c23;
+    --line:#222a33;
+    --text:#e8e6e1;
+    --muted:#8a93a0;
+    --faint:#5a6470;
+    --accent:#4cb782;
+    --accent-soft:rgba(76,183,130,.14);
+    --gold:#c9b08f;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(1100px 520px at 85% -10%, rgba(76,183,130,.07), transparent 60%),
+      radial-gradient(900px 480px at -10% 110%, rgba(201,176,143,.05), transparent 60%);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    padding:48px 24px 72px;
+    line-height:1.55;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+  .brand{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,4.5vw,42px);font-weight:500;letter-spacing:-.01em;line-height:1.1;margin-top:14px}
+  .sub{color:var(--muted);font-size:15.5px;margin-top:12px;max-width:640px}
+  .nav{display:flex;gap:10px;flex-wrap:wrap;margin:26px 0 40px}
+  .nav a{
+    color:var(--muted);text-decoration:none;font-size:13px;
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+    transition:border-color .15s,color .15s;
+  }
+  .nav a:hover{border-color:var(--accent);color:var(--text)}
+
+  section{margin-bottom:52px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .kicker{font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);font-weight:600;margin-bottom:10px}
+  h2{font-family:Georgia,"Times New Roman",serif;font-size:24px;font-weight:500;margin-bottom:14px}
+  p{color:var(--muted);font-size:15px;max-width:70ch}
+  p+p{margin-top:12px}
+  p b, p strong{color:var(--text)}
+
+  /* ---------- the map ---------- */
+  .map{display:flex;flex-direction:column;gap:0;margin-top:22px}
+  .tier{display:grid;gap:14px}
+  .tier.three{grid-template-columns:repeat(3,1fr)}
+  .tier.two{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:760px){.tier.three,.tier.two{grid-template-columns:1fr}}
+  .node{
+    background:var(--surface-2);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;
+  }
+  .node h3{font-size:14.5px;font-weight:650;display:flex;align-items:center;gap:8px}
+  .node h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+  .node.gold h3 .dot{background:var(--gold)}
+  .node p{font-size:13px;margin-top:6px;line-height:1.5}
+  .node .eg{color:var(--faint);font-size:12px;margin-top:8px;font-style:italic}
+  .node.you{
+    border-color:rgba(76,183,130,.45);background:var(--accent-soft);text-align:center;padding:18px;
+  }
+  .node.you h3{justify-content:center;font-size:16px}
+  .flow{
+    display:flex;justify-content:center;align-items:center;gap:10px;
+    color:var(--faint);font-size:12px;letter-spacing:.06em;padding:10px 0;
+  }
+  .flow::before,.flow::after{content:"";width:1px;height:26px;background:linear-gradient(var(--line),var(--accent));display:block}
+  .flow::after{background:linear-gradient(var(--line),var(--accent))}
+  .flow span{transform:translateY(2px)}
+  .loopback{
+    margin-top:14px;border:1px dashed rgba(201,176,143,.4);border-radius:12px;
+    padding:13px 18px;color:var(--gold);font-size:13px;text-align:center;
+  }
+
+  /* ---------- comparison table ---------- */
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14px}
+  th{
+    text-align:left;color:var(--faint);font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;font-weight:600;padding:0 14px 10px;
+  }
+  td{padding:12px 14px;border-top:1px solid var(--line);color:var(--muted);vertical-align:top}
+  td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+  tr td b{color:var(--accent);font-weight:650}
+
+  /* ---------- pipeline ---------- */
+  .pipeline{display:flex;flex-direction:column;gap:0;margin-top:20px}
+  .step{display:flex;gap:16px;align-items:flex-start}
+  .step .n{
+    width:30px;height:30px;border-radius:50%;flex:none;
+    background:var(--surface-2);border:1px solid var(--line);
+    display:grid;place-items:center;font-size:13px;font-weight:650;color:var(--accent);
+  }
+  .step .body{padding-bottom:20px;border-left:1px solid var(--line);margin-left:-31px;padding-left:47px}
+  .step:last-child .body{border-left-color:transparent;padding-bottom:0}
+  .step h3{font-size:14.5px;font-weight:650;padding-top:4px}
+  .step p{font-size:13.5px;margin-top:4px}
+
+  /* ---------- folder grid ---------- */
+  .folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:18px}
+  .folder{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .folder code{color:var(--gold);font-size:13px;font-family:ui-monospace,Consolas,monospace}
+  .folder p{font-size:12.5px;margin-top:5px;line-height:1.45}
+  .plumbing{margin-top:14px;color:var(--faint);font-size:12.5px}
+  .plumbing code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+
+  /* ---------- loop ---------- */
+  .loop-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px;font-size:13.5px}
+  .loop-chip{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 16px;color:var(--text)}
+  .loop-arrow{color:var(--accent);font-weight:700}
+
+  footer{margin-top:8px;color:var(--faint);font-size:12.5px;text-align:center}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">Imperium OS</div>
+    <h1>The system map</h1>
+    <p class="sub">One page on how everything fits together: what happens when you type, where knowledge lives, and why the whole thing gets sharper every week you use it.</p>
+    <nav class="nav">
+      <a href="#map">The map</a>
+      <a href="#why">Why a chat, not an app</a>
+      <a href="#firstclass">Chat vs dashboard</a>
+      <a href="#pipeline">Life of a message</a>
+      <a href="#folders">The folder</a>
+      <a href="#loop">How it learns</a>
+      <a href="setup-status.html">Setup progress →</a>
+    </nav>
+  </header>
+
+  <section id="map">
+    <div class="card">
+      <div class="kicker">The map</div>
+      <h2>Everything, on one screen</h2>
+      <p>You talk at the top. Work flows down through three layers, and everything learned flows back into memory. That round trip is the whole system.</p>
+
+      <div class="map">
+        <div class="node you">
+          <h3>You, in the chat</h3>
+          <p>Plain English. Full sentences, half sentences, voice-dictated rambles. Multiple topics per message welcome.</p>
+        </div>
+
+        <div class="flow"><span>your message is parsed, every ask extracted</span></div>
+
+        <div class="tier three">
+          <div class="node">
+            <h3><span class="dot"></span>Rules</h3>
+            <p>The standards layer, loaded every session. No AI-sounding prose, no invented numbers, research before claims, your privacy list respected, pushback before agreement.</p>
+            <p class="eg">"Sounds like you wrote it, every time."</p>
+          </div>
+          <div class="node">
+            <h3><span class="dot"></span>Skills</h3>
+            <p>The workflow library. 44 pre-built, plus the ones built from your weekly tasks during setup. The same request runs the same proven playbook every time.</p>
+            <p class="eg">"Draft the client update" → your voice, your format.</p>
+          </div>
+          <div class="node">
+            <h3><span class="dot"></span>Memory</h3>
+            <p>Plain-text files that hold everything you've ever told it: people, decisions, deadlines, money, ideas. Written immediately, never only in the chat window.</p>
+            <p class="eg">"What do you know about [client]?" → everything.</p>
+          </div>
+        </div>
+
+        <div class="flow"><span>work executes through tools and connectors</span></div>
+
+        <div class="tier two">
+          <div class="node gold">
+            <h3><span class="dot"></span>Hooks — the enforcement floor</h3>
+            <p>Small scripts that run automatically, outside the AI's discretion. Protected files can't be deleted, research goes through reliable tools, and recommendations can't be reversed just because you pushed back. Rules instruct; hooks make sure.</p>
+          </div>
+          <div class="node gold">
+            <h3><span class="dot"></span>Connectors — the outside world</h3>
+            <p>GitHub backup, Google Workspace, YouTube research, phone notifications, plus optional extras. Each plugged in during setup and verified with a real test before it counts.</p>
+          </div>
+        </div>
+
+        <div class="loopback">↩ Everything learned along the way is written back into memory, committed, and backed up. Session 50 knows what session 1 knew.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="card">
+      <div class="kicker">Upskill · 1 of 3</div>
+      <h2>Why a chat and a folder, not an app</h2>
+      <p>An app gives you buttons someone else chose. This gives you a colleague with hands: it reads and writes files, runs tools, browses, drafts, and researches, shaped entirely by what <b>your</b> business needs. The button list is whatever you can say.</p>
+      <p>The folder is the other half of the trick. Everything the system knows lives in plain text files <b>on your machine</b>: you can open any of them, read them, and correct them. No database to maintain, no server to pay for, no vendor that can lock you out of your own operations. And because the folder is under version control, every change ever made is recorded and reversible — an undo button for your entire company brain.</p>
+      <p>That combination — a reasoning engine plus a transparent file system — is what makes this an <b>operating system</b> instead of a chatbot. A chatbot forgets you when the tab closes. This one files what you said before the conversation ends.</p>
+    </div>
+  </section>
+
+  <section id="firstclass">
+    <div class="card">
+      <div class="kicker">Upskill · 2 of 3</div>
+      <h2>The chat is first-class. Dashboards are windows.</h2>
+      <p>A question people ask early: "where do I actually <b>do</b> things?" The answer is always the chat. Pages like the setup tracker — and the live company dashboard built later — are read-outs. They show; they never do.</p>
+      <table>
+        <thead><tr><th></th><th>The chat</th><th>Dashboards &amp; pages</th></tr></thead>
+        <tbody>
+          <tr><td>What it is</td><td><b>The operating system.</b> Where every instruction, question, and correction happens.</td><td>Windows into the system's state: progress, scores, live numbers.</td></tr>
+          <tr><td>Direction</td><td>Two-way. You speak, it acts, it learns.</td><td>One-way. It displays what the chat-side work produced.</td></tr>
+          <tr><td>When to use</td><td>Anything you want done, changed, found, or remembered.</td><td>A glance: how's setup going, what's the pipeline at.</td></tr>
+          <tr><td>If it looks wrong</td><td>—</td><td>Say so in the chat. The chat fixes what the window shows.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px">Rule of thumb: <b>if you're tempted to click, say it instead.</b> "Open my setup page", "what's left to connect", "update the dashboard" all work as sentences.</p>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="card">
+      <div class="kicker">Upskill · 3 of 3</div>
+      <h2>Life of a message</h2>
+      <p>What actually happens between you hitting enter and work appearing. Say you type: <i>"Had a great call with Sarah from Northgate, she wants the proposal by Friday — also remind me to chase the invoice."</i></p>
+      <div class="pipeline" style="margin-top:22px">
+        <div class="step"><div class="n">1</div><div class="body"><h3>Parse</h3><p>The message is split into every distinct ask: a new contact, a deadline, a deliverable, a reminder. Nothing in a ramble gets dropped.</p></div></div>
+        <div class="step"><div class="n">2</div><div class="body"><h3>Route</h3><p>Each ask is matched against the skill library. Proposal drafting hits the drafting workflow; the reminder hits the task board. No skill match? It does the work directly, and flags if this should become a skill.</p></div></div>
+        <div class="step"><div class="n">3</div><div class="body"><h3>Remember</h3><p>Sarah lands in the people file, Friday on the calendar, both tasks on the kanban — immediately, before any drafting starts.</p></div></div>
+        <div class="step"><div class="n">4</div><div class="body"><h3>Execute, under the rules</h3><p>The proposal draft loads your voice guide, the no-AI-smell rule, and the quality gate: it scores its own output harshly and iterates before you ever see it.</p></div></div>
+        <div class="step"><div class="n">5</div><div class="body"><h3>Commit &amp; back up</h3><p>Every file change is committed and pushed to your private backup. The machine could die tonight and you'd lose nothing.</p></div></div>
+        <div class="step"><div class="n">6</div><div class="body"><h3>Notify</h3><p>If it was a long job, your phone buzzes when it's done. You were never required to watch.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="folders">
+    <div class="card">
+      <div class="kicker">Geography</div>
+      <h2>The folder, mapped</h2>
+      <p>Seven folders you might actually open, and the plumbing you never need to.</p>
+      <div class="folders">
+        <div class="folder"><code>context/</code><p>The one-page truth about your company. Read at the start of every session.</p></div>
+        <div class="folder"><code>memory/</code><p>Everything it learns: people, tasks, dates, money, ideas, lessons.</p></div>
+        <div class="folder"><code>clients/</code><p>One folder per engagement: status, context, deliverables, legal.</p></div>
+        <div class="folder"><code>content-pipeline/</code><p>Drafts, published work, research, and your voice profile.</p></div>
+        <div class="folder"><code>automations/</code><p>The running tools: YouTube research, phone notifications.</p></div>
+        <div class="folder"><code>dashboard/</code><p>Where your live company dashboard gets built, once real data is connected.</p></div>
+        <div class="folder"><code>docs/</code><p>Guides, this map, the architecture explainer, your setup page.</p></div>
+      </div>
+      <p class="plumbing">Plumbing (works without you ever touching it): <code>.claude/</code> rules, skills &amp; hooks · <code>scripts/</code> the self-check tools · <code>.env</code> your keys, local only, never backed up to the internet.</p>
+    </div>
+  </section>
+
+  <section id="loop">
+    <div class="card">
+      <div class="kicker">The compounding part</div>
+      <h2>How it learns</h2>
+      <p>Software normally decays: the team changes, the docs rot, the tool drifts out of date. This system is built to run the opposite direction, through one loop:</p>
+      <div class="loop-row">
+        <span class="loop-chip">use it</span><span class="loop-arrow">→</span>
+        <span class="loop-chip">notice friction</span><span class="loop-arrow">→</span>
+        <span class="loop-chip">correct it in chat</span><span class="loop-arrow">→</span>
+        <span class="loop-chip">the correction becomes a rule or skill edit</span><span class="loop-arrow">→</span>
+        <span class="loop-chip">weekly self-check catches drift</span><span class="loop-arrow">→</span>
+        <span class="loop-chip">you approve, it commits</span><span class="loop-arrow">↩</span>
+      </div>
+      <p style="margin-top:18px">Three sentences are the levers: <b>"Don't do X again"</b> permanently changes behaviour. <b>"Remember this:"</b> permanently files knowledge. <b>"Make this a skill"</b> turns today's one-off into tomorrow's standard. Every one of them is an edit to a text file you can read — which is why the improvements stick.</p>
+      <p>A weekly health check scores the Four C's — <b>Context</b> (does it know the business?), <b>Connections</b> (is it plugged in?), <b>Capabilities</b> (can it do the work?), <b>Cadence</b> (does work happen on rhythm?) — so you watch the system climb instead of guessing whether it's working.</p>
+    </div>
+  </section>
+
+  <footer>
+    Imperium OS · Built by Imperium Growth · <a href="setup-status.html">Setup progress</a> · <a href="START-HERE.md">Start Here</a> · <a href="ARCHITECTURE.md">Architecture</a>
+  </footer>
+
+</div>
+</body>
+</html>

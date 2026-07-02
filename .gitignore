@@ -1,0 +1,74 @@
+# Environment (secrets never enter git)
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE (keep the Explorer clean-view config, ignore the rest)
+.vscode/
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Obsidian vault config (personal settings, not source)
+.obsidian/
+
+# Claude internal (keep skills, rules, hooks; ignore machine-local settings)
+.claude/settings.local.json
+
+# Context persistence (session-specific, not source)
+.context/
+
+# Scrape caches (caches never tracked)
+.firecrawl/
+.playwright-mcp/
+
+# Large media files (keep transcriptions/markdown, exclude audio/video)
+*.m4a
+*.mp4
+*.ogg
+*.opus
+*.wav
+*.mp3
+*.flac
+*.aac
+*.webm
+
+# Images (generated media lives in the Media Hub, not git; remove these
+# lines if you want small images version-controlled)
+*.jpeg
+*.jpg
+*.JPG
+*.png
+*.gif
+*.webp
+
+# PDF outputs (can be regenerated). Client folder PDFs are version-controlled
+# so each client folder stays portable.
+*.pdf
+!clients/**/*.pdf
+
+# Zip archives (deliverables, can be regenerated)
+*.zip
+
+# Raw bank statements (sensitive financial data; keep local, never commit)
+*-account-statement_*.csv
+*-statement_*.csv
+
+# YouTube research data files live untracked (code stays tracked)
+automations/youtube/*.json
+automations/youtube/*.txt
+!automations/youtube/package.json
+!automations/youtube/package-lock.json
+
+# Binary blobs
+*.bin

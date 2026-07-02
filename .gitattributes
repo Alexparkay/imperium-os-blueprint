@@ -1,0 +1,18 @@
+# Normalise line endings: LF in the repo, LF on checkout everywhere.
+# Prevents the Windows "LF will be replaced by CRLF" warning wall on first commit,
+# and protects bash hooks (.sh) from CRLF breakage.
+* text=auto eol=lf
+*.sh text eol=lf
+*.js text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+# binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.mp4 binary
+*.mp3 binary
+*.zip binary
