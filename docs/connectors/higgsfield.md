@@ -36,7 +36,7 @@ This is the one-time step that teaches the service your face.
 
 1. In your Higgsfield account settings, find your API access key (if your plan includes API access) and paste it into the chat: "Here's my Higgsfield key: ...". The system stores it in the local settings file.
 2. Tell the chat: **"My Higgsfield likeness is trained, connect it."**
-3. The system looks up your trained character, confirms with you which one is yours, and saves its ID as your default likeness (this fills the `{{OWNER_SOUL_ID}}` setting across the system). From then on, "make an image of me presenting to a room" just works.
+3. The system looks up your trained character, confirms with you which one is yours, and saves its ID as your default likeness (this fills the `OWNER_SOUL_ID` setting across the system). From then on, "make an image of me presenting to a room" just works.
 
 ## Step 4: Set your look rules (recommended)
 

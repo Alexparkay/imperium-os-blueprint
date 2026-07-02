@@ -128,7 +128,7 @@ Timing is a multiplier. A great concept at the wrong time gets 1/10th the views.
 - Evergreen topic + no hook = 6-10
 - Dead/oversaturated topic = 0-5
 
-**Competitor channels (maintain the owner's list here; check at least 3 per scoring run):**
+**Competitor channels (maintain the owner's list here; check at least 3 per scoring run).** Fill-on-first-use rule: if the list below still shows unfilled double-brace placeholder tokens (the pack-install question was skipped), STOP and ask the owner now - "Which 3 to 5 YouTube channels are your closest competitors?" - write the handles into this list (edit this installed file; fewer than five is fine, delete unused lines), then continue the run. Never score Category 3 against placeholder tokens.
 ```
 1. @{{COMPETITOR_CHANNEL_1}}   # closest ICP match
 2. @{{COMPETITOR_CHANNEL_2}}

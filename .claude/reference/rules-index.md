@@ -7,6 +7,8 @@ created: 2026-06-11
 
 # Rules Index - Catalog of Enforcement Rules
 
+> **Location note:** this catalog lives in `.claude/reference/` (NOT `.claude/rules/`) on purpose - files in `.claude/rules/` auto-load into every session, and a catalog is lookup material, not always-on instruction. The always-on surface carries one pointer to it (in `00-engine-core.md`). Don't move it back.
+
 Rules live in two physical tiers (plus deterministic hook enforcement):
 
 - **always** - file lives in `.claude/rules/` and auto-loads every session (14 files)
@@ -53,6 +55,7 @@ Numbering is inherited from the parent OS, so numbers are sparse. The number is 
 ## Maintenance rules for this index
 
 - A rule's file location IS its tier. If you move a rule, update this table and the hard-rules list in `00-engine-core.md` in the same commit.
+- This catalog itself stays in `.claude/reference/` (see the location note at the top). Pointers to it live in `00-engine-core.md`, `.claude/CLAUDE.md`, `Home.md`, `packs/README.md`, and the scripts (`generate-registry.js`, `os-lint.js`, `install-pack.js`) - update all of them if it ever moves again.
 - New rules default to **import** tier unless they must shape every single response (the bar for always-on is high).
 - The 6 anti-sycophancy rules (11, 17, 19, 20, 27, 28) ship as project rules. If the owner later wants them across ALL their projects, copy them to `~/.claude/rules/` and DELETE the project copies (duplication drifts).
 - `node scripts/os-lint.js` checks this table against disk and flags drift.

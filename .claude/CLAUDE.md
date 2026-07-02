@@ -9,7 +9,7 @@
 
 ## First run
 
-If placeholders like `{{OWNER_NAME}}` are still unfilled anywhere in this repo, onboarding has not completed. When the owner says "I've just installed this, let's start" (or anything similar), run the `start-onboarding` skill. The full flow lives at `docs/ONBOARDING-FLOW.md`.
+If unfilled double-brace placeholders (`OWNER_NAME`-style tokens wrapped in double braces) remain anywhere in this repo, onboarding has not completed. When the owner says "I've just installed this, let's start" (or anything similar), run the `start-onboarding` skill. The full flow lives at `docs/ONBOARDING-FLOW.md`.
 
 ## Persona
 
@@ -25,7 +25,7 @@ Domain map: `Home.md`. Non-technical orientation: `docs/START-HERE.md`.
 
 ## HARD RULES
 
-The hard-rules list, development rules, and key-paths map live in `.claude/rules/00-engine-core.md` (always-on tier - it auto-loads every session; follow it as if it were printed here). Full rules catalog + tiers: `.claude/rules/INDEX.md`.
+The hard-rules list, development rules, and key-paths map live in `.claude/rules/00-engine-core.md` (always-on tier - it auto-loads every session; follow it as if it were printed here). Full rules catalog + tiers: `.claude/reference/rules-index.md`.
 
 ## Memory write targets
 

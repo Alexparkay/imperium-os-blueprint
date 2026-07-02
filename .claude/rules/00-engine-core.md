@@ -14,7 +14,7 @@ created: 2026-07-02
 
 # Engine Core
 
-The stable operating instructions every seat runs on, whoever sits in it. Rules live in two tiers (see `.claude/rules/INDEX.md`): always-on files in `.claude/rules/` (they auto-load every session, including the six anti-sycophancy rules 11/17/19/20/27/28 - follow them), and on-demand files in `.claude/rules-import/`. **When a trigger below fires, READ the named rules-import file before acting.**
+The stable operating instructions every seat runs on, whoever sits in it. Rules live in two tiers (catalog + triggers: `.claude/reference/rules-index.md`): always-on files in `.claude/rules/` (they auto-load every session, including the six anti-sycophancy rules 11/17/19/20/27/28 - follow them), and on-demand files in `.claude/rules-import/`. **When a trigger below fires, READ the named rules-import file before acting.**
 
 ## HARD RULES
 
@@ -48,7 +48,7 @@ The stable operating instructions every seat runs on, whoever sits in it. Rules 
 
 ## Key paths
 
-- **Authoritative catalogs (generated from disk, never trust inlined counts):** `.claude/reference/registry.md` - refresh with `node scripts/generate-registry.js`. Rules catalog + tiers: `.claude/rules/INDEX.md`.
+- **Authoritative catalogs (generated from disk, never trust inlined counts):** `.claude/reference/registry.md` - refresh with `node scripts/generate-registry.js`. Rules catalog + tiers: `.claude/reference/rules-index.md`.
 - YouTube transcripts: `automations/youtube/` · Notifications: `automations/notify/` + `scripts/notify.js`
 - Content templates: `content-pipeline/templates/` · Voice: `content-pipeline/voice-profile/`
 - Clients: `clients/` (new client → copy `clients/_TEMPLATE/`)

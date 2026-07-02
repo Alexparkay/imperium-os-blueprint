@@ -11,7 +11,7 @@ Domain map of the whole system. An org-chart view over the folders: nothing here
 ## Start here
 
 - **Business context (read first):** [context/index.md](context/index.md)
-- **Config + rules:** `.claude/CLAUDE.md`, `.claude/rules/INDEX.md`
+- **Config + rules:** `.claude/CLAUDE.md`, `.claude/reference/rules-index.md`
 - **How the OS works:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - **New install?** [docs/START-HERE.md](docs/START-HERE.md), then say "I've just installed this, let's start"
 - **Health + audit:** run the `project-health` skill

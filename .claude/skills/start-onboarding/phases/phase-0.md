@@ -41,11 +41,13 @@ Run `pwd` (or read the workspace root). Search the project for the literal text 
 
 ## 6. Start the slow work now, in the background
 
-Kick off `npm install` inside `automations/youtube/` as a background task (it is the only module with dependencies). Don't narrate it; by the time Phase 4 needs it, it's done. If it fails, note it in the state file and retry during Phase 4.
+Kick off `npm install` inside `automations/youtube/` as a background task (the only module onboarding needs installed; `automations/worker/` also has dependencies but is install-team scope and stays dormant). Don't narrate it; by the time Phase 4 needs it, it's done. If it fails, note it in the state file and retry during Phase 4.
 
 ## 7. Create the state file
 
 Create `memory/onboarding-state.md` from the template in SKILL.md, with phase 0 marked done, `current_phase: 1`, and `org_mode` set to what step 1 found (`org-joining` or `solo-or-first-seat`).
+
+**Capture the registry baseline:** run `node scripts/generate-registry.js` once and copy any `WARN:` lines it prints into the state file's "## Registry baseline (pre-install warnings)" section (write "(none)" if clean). These are machine-environment warnings the install didn't cause and usually can't fix from inside this folder (e.g. rule files that differ from a user-global `~/.claude/rules/` copy on this machine). The Phase 5 gate compares against this list: only NEW warnings block.
 
 ## 8. Update the status page
 

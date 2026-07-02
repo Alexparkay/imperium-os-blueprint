@@ -48,7 +48,7 @@ YAML frontmatter fields:
 Body sections:
 
 - `## Routing rows` - the exact table rows the installer appends to `.claude/reference/skills-routing-index.md` (one `| \`skill\` | trigger text |` line per skill).
-- `## Rules index rows` - only if `rules_import` is non-empty: the rows appended to `.claude/rules/INDEX.md`.
+- `## Rules index rows` - only if `rules_import` is non-empty: the rows appended to `.claude/reference/rules-index.md`.
 
 ## Install / uninstall lifecycle
 
@@ -61,7 +61,7 @@ node scripts/install-pack.js <pack> --uninstall  # exact reverse
 
 1. Validate: manifest parses, `skills` list matches `skills/` on disk, pack not already in `packs/installed.json`.
 2. Pre-flight conflict scan: every target path (`.claude/skills/<skill>`, rules-import files, memory scaffolds, templates, routing rows) must be absent. ANY conflict → clear error listing every collision, nothing touched.
-3. Copy skills → `.claude/skills/`, rules-import files → `.claude/rules-import/` (+ append their rows to `.claude/rules/INDEX.md`), memory scaffolds → `memory/`, templates → `content-pipeline/templates/`.
+3. Copy skills → `.claude/skills/`, rules-import files → `.claude/rules-import/` (+ append their rows to `.claude/reference/rules-index.md`), memory scaffolds → `memory/`, templates → `content-pipeline/templates/`.
 4. Append the manifest's routing rows to `.claude/reference/skills-routing-index.md`.
 5. Re-run `node scripts/generate-registry.js`.
 6. Append a marked entry to `memory/system_changelog.md` and record the pack (with the exact files and rows it placed) in `packs/installed.json`.

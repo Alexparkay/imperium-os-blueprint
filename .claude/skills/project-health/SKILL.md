@@ -76,6 +76,8 @@ ACTIONS NEEDED:
 
 Score each C 0-10 and give one concrete gap. This doubles as the weekly health audit the owner runs to know the OS is pulling its weight.
 
+**The real-operator cap (hard rule, no exceptions - same rule as onboarding Phase 7):** before scoring Context, read `memory/onboarding-state.md`. If `real_operator` status is `pending` (a named daily operator has never been onboarded), **Context is capped at 7/10**, whatever the file evidence says. Report it plainly every time: "Context: 7/10, capped - [name] runs this chat day to day and hasn't been onboarded yet. A 20-minute session lifts the cap: say 'onboard [name]'." The cap lifts only when the operator sub-onboarding flips the status to `onboarded`. This applies to EVERY health check, weekly re-audits after graduation included - the cap outlives onboarding.
+
 | C | Test | How to check |
 |---|---|---|
 | **Context** | A fresh session answers "what does this business do + who works here?" without browsing | Does `context/index.md` + `context/org/company.md` exist and load? Is it current vs `memory/business/`? |
@@ -88,7 +90,7 @@ Score each C 0-10 and give one concrete gap. This doubles as the weekly health a
 - **Kill switch / human-in-loop:** no automation auto-sends/auto-posts/auto-invoices without approval.
 - **Broken paths:** key referenced files still exist (`memory/kanban.md`, `content-pipeline/voice-profile/`, `context/index.md`).
 - **Stale memory:** flag memory files untouched >30 days that claim to be "current".
-- **Instruction layer:** rule count vs `.claude/rules/INDEX.md`; flag if always-on rules drift above ~15.
+- **Instruction layer:** rule count vs `.claude/reference/rules-index.md`; flag if always-on rules drift above ~15.
 
 Output a Four Cs line: `CONTEXT x/10 · CONNECTIONS x/10 · CAPABILITIES x/10 · CADENCE x/10` plus the top reliability risk.
 

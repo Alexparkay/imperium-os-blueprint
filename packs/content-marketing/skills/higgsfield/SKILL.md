@@ -48,7 +48,7 @@ node tools/higgsfield/higgsfield-cli.mjs <command> [options]
 #### Soul (Higgsfield's flagship image model)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs soul-image \
-  --prompt "A modern glass house overlooking the Mediterranean at golden hour, architectural photography" \
+  --prompt "City skyline at golden hour, glass towers catching warm light, architectural photography" \
   --size 2048x1152 \
   --quality 1080p \
   --batch 1 \
@@ -79,14 +79,14 @@ node tools/higgsfield/higgsfield-cli.mjs soul-image \
 #### Flux Pro Kontext Max
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs flux-image \
-  --prompt "Modern penthouse apartment with city skyline view" \
+  --prompt "Ceramic artist's workshop, shelves of glazed pottery, soft window light" \
   --aspect-ratio 16:9
 ```
 
 #### ByteDance Seedream
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs seedream-image \
-  --prompt "Tropical beachfront property at sunset" \
+  --prompt "Misty pine forest at dawn, fog drifting between the trees" \
   --aspect-ratio 16:9
 ```
 
@@ -95,7 +95,7 @@ node tools/higgsfield/higgsfield-cli.mjs seedream-image \
 #### DoP (Director of Photography) - Image-to-Video
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs dop-video \
-  --prompt "Slow cinematic dolly forward through the entrance, revealing the interior" \
+  --prompt "Slow cinematic dolly forward through a modern tech office, past rows of workstations" \
   --image ./start-frame.jpg \
   --model dop-standard \
   --motion <motion-uuid> \
@@ -112,24 +112,24 @@ node tools/higgsfield/higgsfield-cli.mjs dop-video \
 **Start + End Frame (transition video):**
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs dop-video \
-  --prompt "Smooth transition from exterior to interior view" \
-  --image ./exterior.jpg \
-  --end-image ./interior.jpg \
+  --prompt "Smooth transition from the closed product box to the assembled device, launch b-roll" \
+  --image ./box.jpg \
+  --end-image ./device.jpg \
   --model dop-standard
 ```
 
 #### Kling (Image-to-Video)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs kling-video \
-  --prompt "Camera slowly orbits around the property" \
-  --image ./property.jpg
+  --prompt "Camera slowly orbits around the product on its display stand" \
+  --image ./product.jpg
 ```
 
 #### ByteDance Seedance (Image-to-Video)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs seedance-video \
-  --prompt "Waves gently lapping on the shore, palm trees swaying" \
-  --image ./beach.jpg
+  --prompt "Clouds drifting over a mountain ridge, meadow grass swaying in the breeze" \
+  --image ./mountains.jpg
 ```
 
 ### Speech-to-Video (Talking Head)
@@ -149,9 +149,9 @@ node tools/higgsfield/higgsfield-cli.mjs speak \
 #### Frame-to-Video (generates start frame → end frame → video automatically)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs frame-to-video \
-  --start-prompt "Exterior view of a modern lakeside house at dawn, warm stone walls" \
-  --end-prompt "Interior view of the same house, sunlight streaming through windows" \
-  --video-prompt "Smooth cinematic transition from exterior to interior, camera glides through the entrance" \
+  --start-prompt "Wide shot of a watchmaker's workbench at dawn, tools laid out in rows" \
+  --end-prompt "Macro view of the finished watch movement under warm lamplight" \
+  --video-prompt "Smooth cinematic push-in from the workbench to the finished movement" \
   --size 2048x1152 \
   --quality 1080p \
   --model dop-standard
@@ -167,7 +167,7 @@ The owner's trained character is the default for any "image of me / image of {{O
 |------|-------------|-------|
 | **{{OWNER_SHORT}}** | `{{OWNER_SOUL_ID}}` | Trained during module setup from 5-25 reference photos. Record the ID here and in `assets/higgsfield/`. |
 
-If `{{OWNER_SOUL_ID}}` is still a placeholder, the character hasn't been trained yet - offer to run `create-character` with the owner's reference photos first.
+If the Soul ID in the table above is still an unfilled placeholder token, the character hasn't been trained yet - offer to run `create-character` with the owner's reference photos first.
 
 ```bash
 # Generate an image of the owner (Soul ID + prompting guide)
@@ -254,7 +254,7 @@ node tools/higgsfield/higgsfield-cli.mjs download \
 
 For generating website assets:
 
-1. **Hero background video:** `frame-to-video` with exterior → interior (or product → detail)
+1. **Hero background video:** `frame-to-video` with establishing shot → close-up detail (e.g. product → macro)
 2. **Card/section images:** `soul-image` with subject-specific prompts, landscape size
 3. **Showcase videos:** `dop-video` from photos with dolly/orbit motions
 4. **Team/presenter videos:** `speak` with headshot + voiceover audio

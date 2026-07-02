@@ -32,7 +32,7 @@ findings.info.push(`registry regenerated: ${regOut.split('\n')[1] || ''}`);
 // ---------- 2. Dead path references in the always-on layer ----------
 const alwaysOnFiles = [
   path.join(ROOT, '.claude', 'CLAUDE.md'),
-  path.join(ROOT, '.claude', 'rules', 'INDEX.md'),
+  path.join(ROOT, '.claude', 'reference', 'rules-index.md'), // not always-on (it lives in reference/ so it does NOT auto-load), but its pointers must stay alive
   ...mdFiles(path.join(ROOT, '.claude', 'rules')).filter(f => f !== 'INDEX.md').map(f => path.join(ROOT, '.claude', 'rules', f)),
   path.join(ROOT, 'context', 'index.md'),
 ];

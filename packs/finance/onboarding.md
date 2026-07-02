@@ -17,6 +17,9 @@ Asked by onboarding Phase 5 (or any later session) when this pack is installed. 
 3. **"Where should bank/provider statement exports land so I can audit them? A folder is fine - I'll read whatever CSVs appear there."**
    → Create the folder (default `memory/finance/statements/`, gitignored if statements are sensitive - ask), note the path in `memory/finance/README.md`.
 
+3b. **"Which accounts will those statements come from - the bank or provider names, one per account? Just names, no numbers."** (Skip if they're not sure yet.)
+   → Write the names into the wallet table in the installed `finance-audit` skill (`.claude/skills/finance-audit/SKILL.md`), replacing its bank placeholder tokens; add or delete rows to match. Leave the pack source copy (`packs/finance/skills/finance-audit/`) untouched - it's the reinstall template. **If skipped:** the tokens stay and the skill's own "fill in during first audit" step collects them on the first real run.
+
 4. **"Who signs off on money decisions - just you, or others? And roughly where are your lines: what amount should always stop for sign-off?"**
    → Hands straight into the `approval-thresholds` skill's setup interview (it asks the precise limits). Approver names → `memory/people.md`.
 

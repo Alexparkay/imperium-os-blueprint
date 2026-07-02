@@ -20,7 +20,7 @@ const ROOT = path.resolve(__dirname, '..');
 const PACKS_DIR = path.join(ROOT, 'packs');
 const STATE_FILE = path.join(PACKS_DIR, 'installed.json');
 const ROUTING_FILE = path.join(ROOT, '.claude', 'reference', 'skills-routing-index.md');
-const RULES_INDEX_FILE = path.join(ROOT, '.claude', 'rules', 'INDEX.md');
+const RULES_INDEX_FILE = path.join(ROOT, '.claude', 'reference', 'rules-index.md');
 const CHANGELOG_FILE = path.join(ROOT, 'memory', 'system_changelog.md');
 
 function die(msg) { console.error(`ERROR: ${msg}`); process.exit(1); }

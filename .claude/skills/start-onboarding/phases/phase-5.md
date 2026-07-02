@@ -36,10 +36,10 @@ One more default: operational outputs (briefs, status notes, summaries) bias to 
 
 ## 5. Before leaving this phase
 
-Run `node scripts/generate-registry.js`. The warning list must be EMPTY (no unrouted skills, no client folders missing STATUS.md, no pack drift). Fix anything it names; do not graduate drift.
+Run `node scripts/generate-registry.js`. The gate: **no NEW warnings versus the pre-install baseline** recorded in the state file at Phase 0. Warnings that already existed before the install (machine-local ones like "rule differs from the user-global ~/.claude/rules/ copy") never block - the install didn't cause them and can't fix them from inside this folder. Anything the install introduced DOES block: unrouted skills, client folders missing STATUS.md, pack drift. Fix every new warning it names; do not graduate drift.
 
 ## 6. Close the phase
 
 Update state file and status page (Phase 5 done, Phase 6 current, overall 75%, pack cards current). Celebrate properly here; this is the moment the system started doing their work.
 
-**Exit criteria:** 3-5 skills exist (pack skills count), each has run once on real input, the routing index carries them all, the registry runs clean, pack offer resolved (installed or declined, recorded both places), user has seen and reacted to each output.
+**Exit criteria:** 3-5 skills exist (pack skills count), each has run once on real input, the routing index carries them all, the registry gate passes (no new warnings vs the Phase 0 baseline), pack offer resolved (installed or declined, recorded both places), user has seen and reacted to each output.

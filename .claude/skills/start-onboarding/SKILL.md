@@ -142,6 +142,9 @@ status: in-progress
 - packs_installed: (none yet)
 - packs_declined: (none)
 
+## Registry baseline (pre-install warnings)
+(WARN lines from the Phase 0 `node scripts/generate-registry.js` run, or "(none)". The Phase 5 gate blocks only on NEW warnings versus this list.)
+
 ## Weekly task candidates (Phase 5 input)
 -
 
@@ -181,7 +184,9 @@ The project ships with double-brace tokens like `{{OWNER_NAME}}`. When a phase s
 - Re-run the search to confirm zero survivors of the replaced tokens outside the excluded files.
 - **Report it in plain English:** "I've written your details into the system. [N] files updated." Then list the files as short bullets (file name + one-word reason). Never show diff output.
 
-The full token-by-token lifecycle (what fills when, and the end-of-Phase-4 defaults table) lives in `docs/ONBOARDING-FLOW.md` and `phases/phase-4.md`.
+**Self-documentation convention (why the pass can't corrupt prose):** outside the excluded files, any prose that needs to MENTION a token names it without the double braces (backticked, e.g. the `OWNER_NAME` token) - see `.claude/CLAUDE.md`'s "First run" line for the shape. A raw double-brace token anywhere outside the excluded files is therefore ALWAYS a live fill target; replace it without hesitation. When writing new docs or pack manifests, follow the same convention - never put a raw double-brace token in a sentence that talks ABOUT the token.
+
+The full token-by-token lifecycle (what fills when, the end-of-Phase-4 defaults table, and the deferred-ok allowlist that `scripts/package-check.js --client` enforces) lives in `docs/ONBOARDING-FLOW.md` and `phases/phase-4.md`.
 
 ## Recovery behaviours
 

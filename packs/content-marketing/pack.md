@@ -26,7 +26,7 @@ skills:
 connectors:
   - video-platform research tooling (transcript-pull service; the base automations/youtube/ module provides the runtime)
   - transcription service for audio/video files (API key in the root .env)
-  - cloud media storage for footage and generated assets (an rclone-compatible remote; fills the {{MEDIA_STORE}} answer)
+  - cloud media storage for footage and generated assets (an rclone-compatible remote; fills the media-store answer collected in onboarding Phase 4)
   - optional AI image/video generation service (the media-prompt skills are prompt-first and work without a CLI)
 rules_import: []
 memory: []

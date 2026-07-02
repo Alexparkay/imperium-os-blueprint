@@ -17,7 +17,17 @@
 //   5. Badge contract    - non-live data is always labelled (SEED DATA badge /
 //                          the worker's "source" field)
 //   6. Placeholders      - onboarding tokens inventoried; documented-only in
-//                          template mode, ZERO SURVIVORS in --client mode
+//                          template mode; in --client mode zero survivors
+//                          EXCEPT the deferred-ok allowlist: the table between
+//                          <!-- deferred-ok:start --> and <!-- deferred-ok:end -->
+//                          in docs/ONBOARDING-FLOW.md is the single source of
+//                          truth for tokens whose feature is legitimately
+//                          dormant (skipped connectors, uninstalled packs).
+//                          Each row = backticked token patterns (trailing *
+//                          matches a prefix family) + backticked path prefixes
+//                          where survivors are allowed. A survivor matching a
+//                          pattern INSIDE an allowed path passes (reported as
+//                          info); everything else fails.
 //
 // The scrub blacklist (scrub-blacklist.local.json) is maintainer-local and
 // gitignored: the MECHANISM ships, the list does not. Reserved keys in that
@@ -405,20 +415,50 @@ console.log('');
   }
 
   if (CLIENT_MODE) {
-    // Zero survivors outside the files that DOCUMENT the tokens.
+    // Zero survivors outside the files that DOCUMENT the tokens, with one
+    // principled exception: the deferred-ok allowlist in ONBOARDING-FLOW.md
+    // (tokens whose feature is dormant until a connector/pack step runs).
     const EXEMPT = new Set(['docs/ONBOARDING-FLOW.md']);
     const EXEMPT_PREFIXES = ['.claude/skills/start-onboarding/']; // the whole skill dir (dispatcher + phases/ + roles/) documents the token system
+
+    // Parse the deferred-ok allowlist (single source of truth, see header).
+    const deferredOk = []; // { exact: Set, prefixes: [], paths: [] }
+    {
+      const flow = contentOf('docs/ONBOARDING-FLOW.md');
+      const block = (flow.match(/<!--\s*deferred-ok:start\s*-->([\s\S]*?)<!--\s*deferred-ok:end\s*-->/) || [])[1] || '';
+      for (const line of block.split('\n')) {
+        if (!line.trim().startsWith('|') || /^\|\s*-+/.test(line.trim()) || /Token pattern/i.test(line)) continue;
+        const cells = line.split('|').map((c) => c.trim());
+        if (cells.length < 3) continue;
+        const tokenPatterns = [...cells[1].matchAll(/`\{\{([A-Z][A-Z0-9_]*\*?)\}\}`/g)].map((m) => m[1]);
+        const pathPrefixes = [...cells[2].matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+        if (!tokenPatterns.length || !pathPrefixes.length) continue;
+        deferredOk.push({
+          exact: new Set(tokenPatterns.filter((t) => !t.endsWith('*'))),
+          prefixes: tokenPatterns.filter((t) => t.endsWith('*')).map((t) => t.slice(0, -1)),
+          paths: pathPrefixes,
+        });
+      }
+      if (!deferredOk.length) warn(CHECK, 'deferred-ok allowlist not found in docs/ONBOARDING-FLOW.md (markers deferred-ok:start/end) - --client is running with zero allowances');
+    }
+    const isDeferredOk = (t, file) => deferredOk.some((row) =>
+      (row.exact.has(t) || row.prefixes.some((p) => t.startsWith(p))) &&
+      row.paths.some((p) => file === p || file.startsWith(p)));
+
     let survivors = 0;
+    let allowed = 0;
     for (const [t, occs] of inventory) {
       for (const o of occs) {
         if (EXEMPT.has(o.file) || EXEMPT_PREFIXES.some((p) => o.file.startsWith(p))) continue;
+        if (isDeferredOk(t, o.file)) { allowed++; continue; }
         survivors++;
-        fail(CHECK, `${o.file}:${o.line} - unreplaced placeholder {{${t}}} (client packages ship zero survivors)`);
+        fail(CHECK, `${o.file}:${o.line} - unreplaced placeholder {{${t}}} (client packages ship zero survivors outside the deferred-ok allowlist)`);
       }
     }
+    if (allowed) info(CHECK, `${allowed} dormant-token occurrence(s) allowed by the deferred-ok allowlist (docs/ONBOARDING-FLOW.md)`);
     results.push(survivors === 0
-      ? { n: 6, name: 'Placeholders (client: zero survivors)', status: 'PASS', detail: 'no unreplaced tokens outside onboarding docs' }
-      : { n: 6, name: 'Placeholders (client: zero survivors)', status: 'FAIL', detail: `${survivors} survivor(s)` });
+      ? { n: 6, name: 'Placeholders (client: zero survivors)', status: 'PASS', detail: `no unreplaced tokens outside onboarding docs (${allowed} deferred-ok allowed)` }
+      : { n: 6, name: 'Placeholders (client: zero survivors)', status: 'FAIL', detail: `${survivors} survivor(s), ${allowed} deferred-ok allowed` });
   } else {
     // Template mode: tokens are SUPPOSED to exist. Inventory is informational;
     // tokens outside the documented lifecycle warn (lenient by design).

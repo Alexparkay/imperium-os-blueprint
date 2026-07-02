@@ -86,9 +86,13 @@ const rulesDir = path.join(ROOT, '.claude', 'rules');
 const alwaysRules = mdFiles(rulesDir).filter(f => f !== 'INDEX.md');
 const importRules = mdFiles(path.join(ROOT, '.claude', 'rules-import'));
 // Optional user-global tier: only counted if the owner has set one up.
+// On vendor machines (OS_VENDOR_MACHINE=1) the user-global tier serves OTHER
+// projects: skip listing it (and the dup check below) so the SHIPPED registry
+// never embeds vendor-machine state a buyer can't reproduce.
+const vendorMachine = process.env.OS_VENDOR_MACHINE === '1';
 const HOME = process.env.USERPROFILE || process.env.HOME || '';
 const globalRulesDir = HOME ? path.join(HOME, '.claude', 'rules') : '';
-const globalRules = globalRulesDir ? mdFiles(globalRulesDir) : [];
+const globalRules = (!vendorMachine && globalRulesDir) ? mdFiles(globalRulesDir) : [];
 lines.push(`## Rules (${alwaysRules.length} always-on · ${importRules.length} import${globalRules.length ? ` · ${globalRules.length} user-global` : ''})`);
 lines.push('');
 lines.push(`- Always-on (.claude/rules/): ${alwaysRules.map(f => f.replace(/\.md$/, '')).join(' · ')}`);
@@ -96,12 +100,12 @@ lines.push(`- Import (.claude/rules-import/): ${importRules.map(f => f.replace(/
 if (globalRules.length) {
   lines.push(`- User-global (~/.claude/rules/): ${globalRules.map(f => f.replace(/\.md$/, '')).join(' · ')}`);
 }
-lines.push('- Tiers + triggers: `.claude/rules/INDEX.md`');
+lines.push('- Tiers + triggers: `.claude/reference/rules-index.md`');
 lines.push('');
 
 // duplication check: same rule file in project and user-global (they drift)
 for (const f of [...alwaysRules, ...importRules]) {
-  if (globalRules.includes(f) && process.env.OS_VENDOR_MACHINE !== "1") {
+  if (globalRules.includes(f)) {
     let same = false;
     try {
       const projPath = [path.join(rulesDir, f), path.join(ROOT, '.claude', 'rules-import', f)].find(p => fs.existsSync(p));

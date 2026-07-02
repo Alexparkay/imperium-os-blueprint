@@ -9,7 +9,7 @@
 
 const axios = require('axios');
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env'), quiet: true }); // quiet: suppress dotenv's banner + promo tips in buyer-facing output
 
 const APIFY_TOKEN = process.env.APIFY_API_TOKEN;
 const ACTOR_ID = 'karamelo~youtube-transcripts';
@@ -163,7 +163,10 @@ if (require.main === module) {
       }
     })
     .catch(err => {
-      console.error('Error:', err.message);
+      const status = err.response && err.response.status;
+      if (status === 401) console.error('Error: Apify rejected the API token (401). Check APIFY_API_TOKEN in the root .env (apify.com -> Settings -> Integrations).');
+      else if (status === 402 || status === 403) console.error(`Error: Apify refused the request (${status}) - usually plan limits or credits. Check your Apify account.`);
+      else console.error('Error:', err.message);
       process.exit(1);
     });
 }

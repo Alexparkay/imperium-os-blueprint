@@ -71,7 +71,7 @@ Phase 1's role question records `user_role_type` (owner | department-head | oper
 
 Phase 1 always asks: **"Who will actually sit in this chat most days - you, or someone who runs things for you?"** This exists because of a real deal where the contract signer was not the daily user, and the daily user (an assistant) had been scoped out entirely - it nearly cost adoption.
 
-If someone else is named: their name + role land in `context/seat.md` ("The real operator") and in the state file (`real_operator`, `status: pending`), plus a pending item "operator sub-onboarding: [name]". While that item is pending, **the Phase 7 health baseline may not score Context above 7/10** - the cap and its unlock (a 20-minute sub-onboarding, trigger "onboard [name]", spec at the bottom of `phases/phase-7.md`) are stated to the user in plain terms.
+If someone else is named: their name + role land in `context/seat.md` ("The real operator") and in the state file (`real_operator`, `status: pending`), plus a pending item "operator sub-onboarding: [name]". While that item is pending, **no health check may score Context above 7/10** - the cap lives in BOTH `phases/phase-7.md` (the baseline) and `.claude/skills/project-health/SKILL.md` (every weekly re-audit after graduation), and its unlock (a 20-minute sub-onboarding, trigger "onboard [name]", spec at the bottom of `phases/phase-7.md`) is stated to the user in plain terms.
 
 ## State file
 
@@ -96,22 +96,39 @@ If someone else is named: their name + role land in `context/seat.md` ("The real
 | Token | Filled in | Written to |
 |---|---|---|
 | `{{REPO_PATH}}` | Phase 0 (auto-detected) | everywhere |
-| `{{OWNER_NAME}}` `{{OWNER_SHORT}}` `{{OWNER_ROLE}}` `{{COMPANY_NAME}}` `{{OWNER_EMAIL}}` `{{LOCATION}}` `{{TIMEZONE}}` | Phase 1 | everywhere |
+| `{{OWNER_NAME}}` `{{OWNER_SHORT}}` `{{OWNER_ROLE}}` `{{COMPANY_NAME}}` `{{OWNER_EMAIL}}` `{{LOCATION}}` `{{TIMEZONE}}` | Phase 1 - EXCEPT the owner/principal lines in `context/org/company.md`, `glossary.md`, and `people-roster.md` on non-owner seats (department-head / operator-for-someone): the owner-line guard holds those for Phase 2, which fills them from the explicit `company_owner` answer, never from the seat holder's identity | everywhere |
 | `{{OS_NAME}}` | Phase 1 (the naming question; offered default: company name + " OS") | context/identity.md |
 | `{{CCY}}` | Phase 2 (offer question collects the currency) | finance skills |
-| `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}` | Phase 2 (Branch A; org-joining seats inherit them via the pre-filled org files) | everywhere |
+| `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}` | Phase 2, both branches: Branch A fills them from the company interview; Branch B distils the same three values from the mirrored `context/org/` files, confirms them during the read-back, and runs the same pass (the pre-filled org files carry the truth, but live base files outside `context/org/` still hold the tokens until this pass runs) | everywhere |
 | `{{VOICE_SAMPLE}}` | Phase 3 | everywhere |
 | `{{BRAND_PRIMARY}}` `{{BRAND_NEUTRALS}}` `{{BRAND_FONTS}}` | Phase 3 (brand-assets question; default "not set - ask the owner") | presentation-builder |
-| `{{NOTIFY_CHANNEL}}` | Phase 4 (Telegram step) | everywhere |
+| `{{NOTIFY_CHANNEL}}` | Phase 4 (Telegram step); deferred-ok while telegram-notify is skipped or deferred - the notify rule and notify-deliver skill carry a "not configured - skip silently" runtime fallback | everywhere |
 | `{{DEPLOY_TARGET}}` | Phase 4 end-sweep (default: `none configured (local only)` - the shipped deploy rule already carries the default; the sweep row exists so a literal token can never survive onboarding) | deploy rule (`rules-import/06`) |
 | `{{MEDIA_STORE}} (and {{MEDIA_HUB_DRIVE_ID}} if Drive media saving is wanted)` | Phase 4 (optional Dropbox / media-hub steps) | everywhere |
 | `{{FOLDER_*}}` (media hub) | google-workspace connector, media-hub setup step; dormant if skipped | media-hub skill |
 | `{{OWNER_SOUL_ID}}` | Phase 4 (optional Higgsfield step) | everywhere |
 | `{{OWNER_SOUL_CINEMATIC_ID}}` `{{OWNER_WARDROBE_STYLE}}` `{{OWNER_COLOR_PALETTE}}` `{{OWNER_PHYSIQUE_NOTES}}` `{{OWNER_ACCESSORIES}}` `{{OWNER_AESTHETIC_AVOID}}` `{{OWNER_TEXT_DEFAULTS}}` | Phase 4 (optional Higgsfield step, alongside `{{OWNER_SOUL_ID}}`); dormant if skipped | owner-likeness rule (`rules-import/26`) |
 | `{{DEPARTMENT}}` | Phase 2 (departments interview / seat interview) | context/org/departments.md |
-| `{{BANK_*}}` `{{COMPETITOR_CHANNEL_*}}` | at pack install (`node scripts/install-pack.js <pack>`), by the pack's own setup questions; dormant until then | finance-audit / video-score pack skills |
+| `{{BANK_*}}` `{{COMPETITOR_CHANNEL_*}}` | at pack install (`node scripts/install-pack.js <pack>`), by the pack's own setup questions (finance asks for account names, content-marketing asks for competitor channels), written into the INSTALLED copy under `.claude/skills/`; if the question is skipped, the skill fills them on its first real run (the fill-on-first-use rule is written into each skill). The `packs/` source copies stay tokenized by design - they are the reinstall template | finance-audit / video-score pack skills |
 
-Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the entire start-onboarding skill directory (`.claude/skills/start-onboarding/`), because they document the tokens. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user. `scripts/package-check.js` enforces this lifecycle: tokens outside this table warn in template mode, and in `--client` mode any surviving token outside the documenting files fails the build.
+Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the entire start-onboarding skill directory (`.claude/skills/start-onboarding/`), because they document the tokens. **Self-documentation convention:** outside those excluded files, prose that mentions a token names it WITHOUT the double braces (backticked, e.g. the `OWNER_NAME` token), so a raw double-brace token outside the excluded files is always a live fill target and the passes can never corrupt documentation. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user.
+
+`scripts/package-check.js` enforces this lifecycle: tokens outside this table warn in template mode, and in `--client` mode any surviving token outside the documenting files fails the build **unless it is on the deferred-ok allowlist below, in one of its allowed paths**.
+
+### Deferred-ok tokens (client-mode allowlist)
+
+The single source of truth for tokens that MAY survive onboarding because their feature is dormant until a connector or pack step runs. Phase 4's end-of-phase sweep (`phases/phase-4.md`, section 6) and `scripts/package-check.js --client` both read this table - the script parses the rows between the two HTML markers, so keep the format: column 1 lists backticked token patterns (a trailing `*` matches the prefix family), column 2 lists backticked path prefixes where survivors are allowed, column 3 is prose. A token surviving anywhere else, or any token not in this table, fails `--client`.
+
+<!-- deferred-ok:start -->
+| Token pattern | Allowed paths | Dormant until |
+|---|---|---|
+| `{{FOLDER_*}}` | `.claude/skills/media-hub/` | the google-workspace media-hub setup runs (Phase 4, optional) |
+| `{{OWNER_SOUL_*}}` | `.claude/rules-import/26-owner-likeness-generation.md` · `packs/content-marketing/skills/higgsfield/` · `.claude/skills/higgsfield/` | the Higgsfield connector is configured (Phase 4, optional) |
+| `{{OWNER_WARDROBE_STYLE}}` `{{OWNER_COLOR_PALETTE}}` `{{OWNER_ACCESSORIES}}` `{{OWNER_PHYSIQUE_NOTES}}` `{{OWNER_AESTHETIC_AVOID}}` `{{OWNER_TEXT_DEFAULTS}}` | `.claude/rules-import/26-owner-likeness-generation.md` | the Higgsfield connector's look-rules step (Phase 4, optional) |
+| `{{NOTIFY_CHANNEL}}` | `.claude/rules-import/12-notify-owner.md` · `.claude/skills/notify-deliver/` | the telegram-notify connector is verified (runtime falls back to "not configured - skip silently") |
+| `{{BANK_*}}` | `packs/finance/skills/finance-audit/` · `.claude/skills/finance-audit/` | the finance pack's account-names question, or finance-audit's first real run |
+| `{{COMPETITOR_CHANNEL_*}}` | `packs/content-marketing/skills/video-score/` · `.claude/skills/video-score/` | the content-marketing pack's competitor question, or video-score's first real run |
+<!-- deferred-ok:end -->
 
 ## The phases
 
@@ -120,22 +137,22 @@ Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file)
 - **Goal:** install type detected; the user understands chat/memory/skills and the folders; install path set.
 - **Branch:** org-detect (above) picks the greeting - standard welcome, or the "click into place" greeting for org-joining seats.
 - **Questions:** 1 ("Shall we start?").
-- **Actions:** welcome + folder tour (org-joining adds one line about the shared, propose-upward org files); detect repo path and replace `{{REPO_PATH}}`; start the `automations/youtube` dependency install in the background; create the state file with `org_mode`; first status-page update (org-mode indicator set if already known); offer to open the page.
-- **Exit criteria:** org mode recorded; state file exists; status page current; user consented.
+- **Actions:** welcome + folder tour (org-joining adds one line about the shared, propose-upward org files); detect repo path and replace `{{REPO_PATH}}`; start the `automations/youtube` dependency install in the background; run `node scripts/generate-registry.js` once and record its warning lines in the state file as the **pre-install registry baseline** (the Phase 5 gate compares against it); create the state file with `org_mode`; first status-page update (org-mode indicator set if already known); offer to open the page.
+- **Exit criteria:** org mode recorded; state file exists (registry baseline included); status page current; user consented.
 
 ### Phase 1 - Identity + role + real operator
 
 - **Goal:** the system knows whose seat this is, what kind of seat it is, and who actually operates it; identity placeholders filled repo-wide.
 - **Questions:** 7 - name; role (the four-way taxonomy, with department follow-up and, for operator seats, the relayed-instruction calibration); **the real-operator question (mandatory)**; company (multi-venture branch: HOME company + `context/<venture>.md` per extra venture; plus the 10-second naming beat → `os_name`); email; location + timezone (travel mode); privacy list.
 - **Branch:** resolves provisional `org_mode`; selects the role card; a named non-user operator creates the pending sub-onboarding item.
-- **Actions:** privacy list → `.claude/rules/13-owner-privacy.md`; fill `context/seat.md` (who sits here + real operator); replace `{{OS_NAME}}` in `context/identity.md`; placeholder pass for the seven identity tokens; verify by re-grep; report files touched; status page gets company name, role, department, org-mode.
+- **Actions:** privacy list → `.claude/rules/13-owner-privacy.md`; fill `context/seat.md` (who sits here + real operator); replace `{{OS_NAME}}` in `context/identity.md` (deleting the marker comment and the expired "While unfilled" fallback sentence); placeholder pass for the seven identity tokens **with the owner-line guard** (on non-owner seats the owner/principal lines in `context/org/company.md`, `glossary.md`, `people-roster.md` are held for Phase 2's explicit `company_owner` answer - the seat holder is never written into shared org truth as owner); verify by re-grep; report files touched; status page gets company name, role, department, org-mode.
 - **Exit criteria:** role card selected; real-operator answer recorded; re-grep clean; report delivered; state + status page updated.
 
 ### Phase 2 - Business context (company + seat)
 
 - **Goal:** the system knows the company AND this seat's corner of it.
-- **Branch A (solo / org-first-seat):** the 7-question company interview (one-liner + team; ICP; offers + currency; positioning + NOT list; weekly check-in places; weekly time-eaters + incoming requests; guardrails) + optional glossary follow-up → writes `context/org/company.md`, `offers.md`, `glossary.md`, `departments.md`, fills `Home.md`, replaces `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`, reads the summary back.
-- **Branch B (org-joining):** read back the pre-loaded org truth (one-liner, their department's row, key glossary terms) for confirmation - ~2 minutes; corrections filed to `memory/org-proposals/` per rule 32, never edited into the mirror; the weekly-places and weekly-tasks questions still run, scoped to the seat.
+- **Branch A (solo / org-first-seat):** the 7-question company interview (one-liner + team; the owner question on non-owner seats → `company_owner`; ICP; offers + currency; positioning + NOT list; weekly check-in places; weekly time-eaters + incoming requests; guardrails) + optional glossary follow-up → writes `context/org/company.md`, `offers.md`, `glossary.md`, `departments.md`, and `people-roster.md` (owner/principal lines from `company_owner`, the seat holder under their real role), reviews `Home.md`, replaces `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`, flips the filled files' frontmatter to `status: active`, reads the summary back.
+- **Branch B (org-joining):** read back the pre-loaded org truth (one-liner, their department's row, key glossary terms) for confirmation - ~2 minutes; corrections filed to `memory/org-proposals/` per rule 32, never edited into the mirror; the three business tokens (`{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`) filled in base files from the org truth and confirmed during the read-back; the weekly-places and weekly-tasks questions still run, scoped to the seat.
 - **Both branches, then:** the **seat interview** from the role card - department mission, KPIs, who the seat answers to, who lands requests on it, approval boundary → `context/seat.md` + `approval_boundary` in state; seat summary read back.
 - **Exit criteria:** branch outputs written (or confirmed); seat file filled and confirmed; state + status page updated.
 
@@ -161,15 +178,15 @@ Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file)
 - **Goal:** 3-5 real weekly tasks running as skills, each proven on live input; the department pack question answered.
 - **Pack offer first:** the role card names ONE pack + one-line pitch. Yes → `node scripts/install-pack.js <pack>`, then the pack's own questions (`packs/<pack>/onboarding.md`), then ONE pack skill walked on a real input as the first win; recorded in `packs_installed` + status card `installed`. No → `packs_declined` + card `declined`, no re-pitch that session. Multi-pack allowed, one recommended to start.
 - **Then build the rest:** pick from the Phase 2 task list; ≤3 clarifiers per skill; build at `.claude/skills/<kebab-name>/SKILL.md`; run for real; fix the skill from the reaction; row it into `.claude/reference/skills-routing-index.md`; STATUS.md stubs for touched client folders.
-- **Gate:** `node scripts/generate-registry.js` warning list EMPTY before leaving.
-- **Exit criteria:** 3-5 proven skills (pack skills count); routing complete; registry clean; pack offer resolved both places.
+- **Gate:** `node scripts/generate-registry.js` reports **no NEW warnings versus the pre-install baseline** captured in Phase 0 (machine-local warnings that pre-date the install - e.g. differing user-global rule copies - never block; anything the install introduced does).
+- **Exit criteria:** 3-5 proven skills (pack skills count); routing complete; registry gate passed; pack offer resolved both places.
 
 ### Phase 6 - Cadence + memory bootstrap (C4)
 
 - **Goal:** run-rhythm decided; memory seeded.
 - **Questions:** 1 per skill (scheduled vs on-demand; recommend on-demand for week one) + 1 ("top 3 things on your plate this week?").
 - **Actions:** `## Cadence` on each skill (pack skills included); seed `memory/kanban.md` + `memory/calendar.md` (pending operator item goes on the board); explain the memory targets; run the registry.
-- **Exit criteria:** cadence recorded; board seeded; registry clean.
+- **Exit criteria:** cadence recorded; board seeded; registry regenerated (no new warnings vs the Phase 0 baseline).
 
 ### Phase 7 - Health baseline + graduation
 
@@ -195,7 +212,7 @@ The skill edits `docs/setup-status.html` directly. Stable hooks (mirrored in the
 ## Maintainer notes
 
 - Keep the interview question wording in the phase files; this doc describes intent, the skill owns the words.
-- If you add a connector: five edits, always together - guide in `docs/connectors/`, row in `docs/connectors/INDEX.md`, row in the state-file template (SKILL.md), card on the status page, mention in the right role cards.
+- If you add a connector: five edits, always together - guide in `docs/connectors/`, row in `docs/connectors/INDEX.md`, row in the state-file template (SKILL.md), card on the status page, mention in the right role cards. **Exception:** install-team-tier connectors (`org-sync`, `company-brain`, `worker`) and `claude-code-install` (a precondition, not a guided step) get the guide + INDEX row only - Phase 4 names them and records interest under the state file's "Pending items"; state-file rows and status-page cards are for guided connectors.
 - If you add a role card: add it to the card map in SKILL.md and here, and give it all three sections (seat interview, connectors, first tasks + pack).
 - If you add a pack: it needs a status-page card, a row in the state file's Packs section, and a home in at least one role card's recommendation logic.
 - The quality bar for every user-facing sentence in this flow: a smart non-technical operator can act on it without a call.

@@ -64,4 +64,4 @@ The most expensive sentence in operations is "I thought YOU were doing that". Th
 
 - [[process-health]]
 - `memory/kanban.md` · `memory/calendar.md`
-- `.claude/rules/16-kanban-calendar-sync.md` (via rules-import)
+- `.claude/rules-import/16-kanban-calendar-sync.md`
