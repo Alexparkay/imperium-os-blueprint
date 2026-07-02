@@ -72,3 +72,6 @@ automations/youtube/*.txt
 
 # Binary blobs
 *.bin
+
+# Scrub verification (list never ships; mechanism does)
+scrub-blacklist.local.json
