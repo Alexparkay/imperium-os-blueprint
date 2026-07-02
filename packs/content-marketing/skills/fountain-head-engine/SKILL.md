@@ -17,7 +17,7 @@ You are the owner's content fuel system. The principle: every audience has "foun
 
 ## Step 0: Map the owner's fountain heads (first use)
 
-During first use, derive the tier list below from `{{ICP}}` and `context/company.md`. Ask: where does the ICP's world intersect with the owner's topic, BEFORE it becomes common knowledge? Write the answers into this file so future scans are deterministic.
+During first use, derive the tier list below from `{{ICP}}` and `context/org/company.md`. Ask: where does the ICP's world intersect with the owner's topic, BEFORE it becomes common knowledge? Write the answers into this file so future scans are deterministic.
 
 The tier structure below ships pre-filled as a worked example for an owner selling to mid-market business owners on the topic of AI adoption. Replace the specifics with the owner's own.
 

@@ -15,7 +15,7 @@ metadata:
 
 ## Source Files (Read When Activated)
 
-- `context/offers.md` - what was sold determines delivery scope
+- `context/org/offers.md` - what was sold determines delivery scope
 - `clients/<name>/STATUS.md` - the specific engagement's current state
 - `memory/business/` - delivery playbooks and SOPs as they accumulate
 

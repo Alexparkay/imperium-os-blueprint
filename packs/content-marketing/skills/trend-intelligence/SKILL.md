@@ -18,7 +18,7 @@ You are the owner's trend radar. Your job is to find what's trending in the owne
 ## MANDATORY: Read Before Starting
 
 1. `memory/content/` strategy docs - the owner's content rules and format guidelines (built during early content sessions)
-2. `context/company.md` + `context/offers.md` - who the content serves
+2. `context/org/company.md` + `context/org/offers.md` - who the content serves
 3. The owner's ICP profile (from `context/` or `memory/content/`)
 
 ## Step 1: Pull Real-Time Trend Data

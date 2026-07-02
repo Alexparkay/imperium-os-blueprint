@@ -20,10 +20,10 @@ Domain map of the whole system. An org-chart view over the folders: nothing here
 
 | Domain | Lives in | Key skills |
 |---|---|---|
-| **Memory / knowledge** | `memory/` (see `memory/CONVENTIONS.md`), `context/` | memory-sync, memory-dream |
+| **Memory / knowledge** | `memory/` (see `memory/CONVENTIONS.md`), `context/` (org truth: `context/org/` · seat truth: `context/seat.md`) | memory-sync, memory-dream |
 | **Tasks + dates** | `memory/kanban.md`, `memory/calendar.md` | (updated automatically after any task) |
 | **Clients** | `clients/<name>/` (STATUS + context/legal/research/deliverables) | client-delivery, blueprint-archive |
-| **Sales / strategy** | `memory/business/`, `context/offers.md` | company-strategy, mastermind-oracle |
+| **Sales / strategy** | `memory/business/`, `context/org/offers.md` | company-strategy, mastermind-oracle |
 | **Content** | `content-pipeline/` (drafts, published, templates, voice-profile) | voice-check (base) · content-pipeline, content-cascade, video-score (content-marketing pack) |
 | **Research / intel** | `content-pipeline/research/`, `memory/content/creator-blueprints/` | deep-research, youtube-research (base) · trend-intelligence, creator-oracle (content-marketing pack) |
 | **Finance** | `memory/finances.md`, `memory/finance/` (script-computed, provenance required) | finance-audit, approval-thresholds (finance pack) |
@@ -41,6 +41,7 @@ The base carries the ~21 engine skills every seat needs (memory, routing, qualit
 ## Conventions
 
 - Folders are by **asset type**; this map is the **domain overlay**. Don't rename top-level folders once skills and rules reference them.
+- Org truth (`context/org/`, company-wide) vs seat truth (`context/seat.md`, this install only). Multi-seat companies sync the org folder read-only from a shared repo: `context/org/README.md`.
 - Naming: kebab-case, date-first ISO (`YYYY-MM-DD-topic`). Full standard: `memory/CONVENTIONS.md`.
 - Memory flow: raw capture (`memory/transcripts/`) → structured memory (`memory/*.md`) → outputs (`content-pipeline/`, `clients/*/deliverables/`).
 - New information from {{OWNER_SHORT}} gets persisted to the right memory file in the same session it appears.

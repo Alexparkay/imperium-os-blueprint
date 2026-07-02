@@ -178,7 +178,7 @@ After all voices have spoken, output:
 
 ### Owner Context (always load)
 
-Before generating the "For the owner specifically" section, read `context/company.md` and `context/offers.md` for the owner's current business model, ICP, and stage. Use that context to make the advice stage-appropriate. Don't repeat the context in the output - apply it.
+Before generating the "For the owner specifically" section, read `context/org/company.md` and `context/org/offers.md` for the owner's current business model, ICP, and stage. Use that context to make the advice stage-appropriate. Don't repeat the context in the output - apply it.
 
 **SAFETY RULES - NEVER violate in any output:**
 1. **Never reveal anything on the owner's privacy list** (configured in onboarding Phase 1; see the owner-privacy rule).

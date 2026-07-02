@@ -9,7 +9,7 @@ USAGE: the relationship ledger. Every person the owner mentions (client contact,
 partner, supplier, hire, referrer) gets an entry here IMMEDIATELY, in the session
 where they come up. When a relationship gets deep enough to need history, promote
 them to a dossier at memory/people/dossiers/<name>.md and leave a pointer here.
-Names of people also belong in context/glossary.md if sessions will see them often.
+Names of people also belong in context/org/glossary.md if sessions will see them often.
 -->
 
 # People: {{COMPANY_NAME}} relationships

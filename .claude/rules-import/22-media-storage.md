@@ -22,7 +22,7 @@ If unsure, default to {{MEDIA_STORE}} for any file > 50 MB.
 
 ## Lookup priority
 
-When the owner references a media file or folder ("the [guest] podcast", "the footage from [date]", "the brand assets"), look in the canonical media-store paths documented in `context/glossary.md` (filled during onboarding). Verify a path exists with `rclone lsd` before telling the owner it does or doesn't.
+When the owner references a media file or folder ("the [guest] podcast", "the footage from [date]", "the brand assets"), look in the canonical media-store paths documented in `context/org/glossary.md` (filled during onboarding). Verify a path exists with `rclone lsd` before telling the owner it does or doesn't.
 
 ## Local file system access
 

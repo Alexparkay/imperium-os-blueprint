@@ -46,7 +46,7 @@ platform: email
 ### Email 5 (Day 10): Direct Offer
 **Subject:**
 **Body:**
-- Clear pitch for the offer (see `context/offers.md`)
+- Clear pitch for the offer (see `context/org/offers.md`)
 - Recap value, exclusivity, scarcity where true
 - Direct CTA with urgency
 

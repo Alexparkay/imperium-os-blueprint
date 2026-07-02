@@ -15,7 +15,7 @@ Asked by onboarding Phase 5 (or any later session) when this pack is installed. 
    → `memory/content/` (create `memory/content/publishing-cadence.md` if absent). The weekly pulse checks against this.
 
 3. **"Who approves content before it goes out - you, someone else, or nobody?"**
-   → If anyone: nothing publishes without their sign-off; record the name in `memory/people.md` and the guardrail in `context/company.md`. If nobody: confirm the standing rule that drafts still wait in `content-pipeline/drafts/` for an explicit "ship it".
+   → If anyone: nothing publishes without their sign-off; record the name in `memory/people.md` and the guardrail in `context/org/company.md`. If nobody: confirm the standing rule that drafts still wait in `content-pipeline/drafts/` for an explicit "ship it".
 
 4. **"Where does your brand voice live - is the voice profile we built during setup the voice for ALL of this, or does some content go out under a different voice (a brand account, a ghostwritten exec)?"**
    → If split: create/point at `content-pipeline/voice-profile/brand-voice.md` and note WHICH channels use which voice. Every skill in this pack loads the voice profile before drafting; a wrong-voice draft is a failed draft.

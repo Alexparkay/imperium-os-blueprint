@@ -15,8 +15,8 @@ metadata:
 
 ## Source Files (Read When Activated)
 
-- `context/offers.md` - the company's current offer ladder and pricing (built in onboarding Phase 2)
-- `context/company.md` - business model, positioning, stage
+- `context/org/offers.md` - the company's current offer ladder and pricing (built in onboarding Phase 2)
+- `context/org/company.md` - business model, positioning, stage
 - `memory/business/` - strategy docs, sales-system notes, improvement audits as they accumulate
 
 Never quote a price, case study, or qualification band that isn't in these files. If the files are thin, say so and help the owner fill them in instead of inventing numbers.
@@ -33,7 +33,7 @@ Structure the company's offers as an ascension ladder. Every tier feeds the next
 | DFY (done-for-you) | Premium / performance | Embedded partnership, retainer, or revenue share [EXAMPLE] |
 | Community / Mastermind | Retention + LTV | Paid peer group [EXAMPLE] |
 
-Fill the actual tiers and prices from `context/offers.md`. When designing a new tier, check: does it ascend naturally from the tier below, and does it have a clear next step above?
+Fill the actual tiers and prices from `context/org/offers.md`. When designing a new tier, check: does it ascend naturally from the tier below, and does it have a clear next step above?
 
 ## Sales Call Structure (90-min Audit-to-Close)
 
@@ -56,7 +56,7 @@ The diagnostic sell: run an audit ON the call so the proposal writes itself.
 
 ## Qualification: Take vs Walk Away
 
-Define explicit take/walk bands from the company's ICP ({{ICP}}) and keep them in `context/offers.md`. The framework:
+Define explicit take/walk bands from the company's ICP ({{ICP}}) and keep them in `context/org/offers.md`. The framework:
 
 **Take:** revenue inside the ICP band, established (not pre-revenue), growth mindset, a clear bottleneck you can fix, speaking to the decision-maker
 **Walk:** well below the ICP band, "just exploring", micromanager profile, no identifiable bottleneck, committee decisions with no champion

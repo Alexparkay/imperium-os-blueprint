@@ -46,6 +46,8 @@ The core discipline: **anything the owner says gets written to the right file im
 
 Alongside memory sits `context/`: the short, stable truth about the company (what it is, what it sells, to whom, in what words). Context is read at the start of every session; memory is searched when needed. Context stays lean by design: pointers and one-pagers, not archives.
 
+**Org truth vs seat truth.** Context splits in two. `context/org/` holds company-wide facts (company, offers, glossary, departments, people roster) - identical for every seat. `context/seat.md` holds this install's facts: who sits here, who actually operates the chat day to day, what this seat approves vs escalates, its KPIs. A single-seat install fills both locally during onboarding. A multi-seat company promotes `context/org/` to a read-only mirror of a shared private "org context repo": each seat pulls it at session start (`scripts/org-sync.js`), and proposes corrections upward through `memory/org-proposals/` instead of editing - so five department heads never hold five drifting versions of the company. Setup: `docs/connectors/org-sync.md`.
+
 The payoff is continuity. Session 50 knows everything session 1 learned, because nothing important ever lived only in a chat window.
 
 ## 3. Skills and auto-triggering
@@ -60,6 +62,7 @@ Skills are also how the OS grows. Phase 5 of onboarding builds your first 3-5 fr
 
 Rules instruct; hooks enforce. A hook (`.claude/hooks/`) is a small script that the harness runs automatically at fixed moments, outside Claude's discretion:
 
+- **At session start:** in multi-seat (org mode) installs, the shared company truth in `context/org/` is refreshed from the org context repo, so every session opens on current facts.
 - **On every prompt you send:** a parser helps route long, multi-topic brain dumps so nothing in them gets dropped.
 - **Before risky tool use:** protected files can't be edited or deleted; YouTube work is forced through the proper transcript tool instead of unreliable scraping.
 - **After every response:** an anti-sycophancy check blocks the failure mode where the assistant reverses a recommendation just because you pushed back without new evidence. Recommendations must state what evidence would change them.

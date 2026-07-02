@@ -11,4 +11,5 @@ Navigation hub for the knowledge base. The registry (`.claude/reference/registry
 - `content/` - ideas backlog, creator blueprints
 - `raw/` - drop zone for unprocessed sources
 - `braindumps/` - long-form voice-dump archives (router audit logs live in `.context/braindump/`)
+- `org-proposals/` - proposed changes to org truth, awaiting the org admin (org mode only; see its README)
 - `system_changelog.md` - how the OS itself evolves

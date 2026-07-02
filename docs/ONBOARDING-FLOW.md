@@ -70,7 +70,7 @@ Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file)
 
 - **Goal:** the 7-question interview; the context spine exists.
 - **Questions:** 7 (company in two sentences; ICP; offers; positioning + NOT list; weekly check-in places; 3-5 weekly time-eating tasks; hard constraints) + optional glossary follow-up.
-- **Actions:** write `context/company.md`, `context/offers.md`, `context/glossary.md`; fill `Home.md`; replace `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`; read the summary back for correction. Questions 5 and 6 are collected lightly here and consumed by Phases 4 and 5.
+- **Actions:** write `context/org/company.md`, `context/org/offers.md`, `context/org/glossary.md`; fill `Home.md`; replace `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`; read the summary back for correction. Questions 5 and 6 are collected lightly here and consumed by Phases 4 and 5.
 - **Outputs:** four context files; three tokens replaced.
 - **Exit criteria:** owner confirmed the read-back summary; state + status page updated.
 

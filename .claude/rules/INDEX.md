@@ -11,7 +11,7 @@ Rules live in two physical tiers (plus deterministic hook enforcement):
 
 - **always** - file lives in `.claude/rules/` and auto-loads every session (13 files)
 - **import** - file lives in `.claude/rules-import/` and does NOT auto-load. CLAUDE.md's hard-rules list carries the one-line trigger; READ the file when the trigger fires
-- **hook** - deterministic enforcement wired in `.claude/settings.json`: rule 01 (PreToolUse on WebFetch + Agent), rule 08 (MCP deny list), anti-fold (Stop), braindump (UserPromptSubmit), protected files (PreToolUse on Edit/Write)
+- **hook** - deterministic enforcement wired in `.claude/settings.json`: rule 01 (PreToolUse on WebFetch + Agent), rule 08 (MCP deny list), anti-fold (Stop), braindump (UserPromptSubmit), protected files (PreToolUse on Edit/Write), org-sync (SessionStart, rule 32's refresh)
 
 Numbering is inherited from the parent OS, so numbers are sparse. The number is an ID, not a count.
 
@@ -47,6 +47,7 @@ Numbering is inherited from the parent OS, so numbers are sparse. The number is 
 | 28 | what-would-change-my-mind | always (hook-enforced) | - |
 | 30 | excalidraw-and-artifact-links | import | Delivering Excalidraw diagrams / PDFs / contracts |
 | 31 | financial-accuracy | always | - |
+| 32 | org-context | import + hook | Org mode active (ORG_CONTEXT_REPO set): any write near `context/org/`, any company-truth change or unconfirmed company fact |
 
 ## Maintenance rules for this index
 

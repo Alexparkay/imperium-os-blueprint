@@ -78,7 +78,7 @@ Score each C 0-10 and give one concrete gap. This doubles as the weekly health a
 
 | C | Test | How to check |
 |---|---|---|
-| **Context** | A fresh session answers "what does this business do + who works here?" without browsing | Does `context/index.md` + `context/company.md` exist and load? Is it current vs `memory/business/`? |
+| **Context** | A fresh session answers "what does this business do + who works here?" without browsing | Does `context/index.md` + `context/org/company.md` exist and load? Is it current vs `memory/business/`? |
 | **Connections** | Live data queries return real data | Are MCP servers reachable? gws CLI authed? Apify token set? Notify channel working? |
 | **Capabilities** | A short phrase triggers a multi-step workflow that ships an artifact | Spot-check 2-3 skills still run end-to-end |
 | **Cadence** | Work happens with the laptop closed | Which crons/routines are enabled? Any automations live on a host 24/7? |

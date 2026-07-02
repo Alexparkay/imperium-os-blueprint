@@ -18,7 +18,7 @@ A fully worked FICTIONAL example follows the template.
 
 | Term | What it is | Where detail lives |
 |---|---|---|
-| {{COMPANY_NAME}} | the company itself | `context/company.md` |
+| {{COMPANY_NAME}} | the company itself | `context/org/company.md` |
 | project or product codename | one-line definition | path to its folder |
 
 ## People
@@ -32,7 +32,7 @@ A fully worked FICTIONAL example follows the template.
 
 | Term | Expansion | Notes |
 |---|---|---|
-| ICP | ideal customer profile | defined in `context/company.md` |
+| ICP | ideal customer profile | defined in `context/org/company.md` |
 | add yours | | |
 
 ---
@@ -43,7 +43,7 @@ A fully worked FICTIONAL example follows the template.
 
 | Term | What it is | Where detail lives |
 |---|---|---|
-| Meridian | Meridian Consulting, the company | `context/company.md` |
+| Meridian | Meridian Consulting, the company | `context/org/company.md` |
 | LeakMap | Meridian's internal diagnostic toolkit | `memory/business/products/` |
 | Northgate | Northgate Logistics, retained client | `clients/northgate-logistics/` |
 
@@ -61,4 +61,4 @@ A fully worked FICTIONAL example follows the template.
 |---|---|---|
 | OTC | order-to-cash | the process Meridian diagnoses |
 | CPO | cost per order | the metric clients are measured on |
-| OHR | Ops Health Retainer | Offer 2 in `context/offers.md` |
+| OHR | Ops Health Retainer | Offer 2 in `context/org/offers.md` |

@@ -18,7 +18,7 @@ You are the owner's content strategist. Before scripting any video, run this ana
 ## Context Files (Read Before Starting)
 
 1. `memory/content/` - the owner's content strategy docs and golden rules (built during onboarding and early content sessions)
-2. `context/company.md` + `context/offers.md` - who the company serves and sells
+2. `context/org/company.md` + `context/org/offers.md` - who the company serves and sells
 3. `memory/content/creator-blueprints/` - title/hook frameworks extracted from studied creators
 
 **Building your corpus:** creator-blueprints/ starts empty in a fresh install. Run `creator-deep-dive` on 2-3 creators whose packaging the owner admires; their extracted frameworks sharpen Step 5 considerably. The skill works without the corpus, just with generic best practices.

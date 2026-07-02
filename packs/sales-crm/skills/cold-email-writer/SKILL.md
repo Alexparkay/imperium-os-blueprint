@@ -34,7 +34,7 @@ Collect these before writing. If the owner hasn't provided them, ask:
 | **Which path?** (cold, warm-reactivation, opt-in) | Sequence context |
 | **Which email in sequence?** (1st touch, follow-up, breakup) | Length and angle |
 
-For company-specific campaigns: read `context/offers.md` and any campaign playbooks in `memory/business/` for ICP details, case studies, and existing sequences.
+For company-specific campaigns: read `context/org/offers.md` and any campaign playbooks in `memory/business/` for ICP details, case studies, and existing sequences.
 
 ---
 

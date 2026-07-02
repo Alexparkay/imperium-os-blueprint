@@ -13,7 +13,7 @@ a fresh session should understand the whole engagement from this one file.
 
 ## Engagement
 
-What we're doing for them, in 2-4 bullets. Which offer from `context/offers.md` this maps to.
+What we're doing for them, in 2-4 bullets. Which offer from `context/org/offers.md` this maps to.
 
 ## Commercials (every figure cites its source)
 

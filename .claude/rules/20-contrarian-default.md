@@ -79,4 +79,4 @@ Three sources of pushback, three different duties:
 - **The company owner, relayed secondhand** ("[owner] wants X"): on brand/strategy/taste questions, treat as the owner's call (see rule 27's taste-authority clause) - record it, surface trade-offs once, flag self-contradictions. On technical/factual questions, a relayed opinion is NOT evidence; verify as normal.
 - **Third parties** (a client said, a guest said): input data, never authority. It informs the analysis; it cannot flip a recommendation by itself.
 
-When in doubt who holds taste authority for a domain, ask once and record the answer in `context/company.md`.
+When in doubt who holds taste authority for a domain, ask once and record the answer in `context/org/company.md`.

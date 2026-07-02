@@ -9,7 +9,7 @@ pack: finance
 Asked by onboarding Phase 5 (or any later session) when this pack is installed. One question at a time. Record answers in `memory/onboarding-state.md` under a `## Pack: finance` heading, and route them to the files named below.
 
 1. **"How is the business set up legally - one company, several, sole trader? Just the shape, so money conversations use the right entities."**
-   → `context/company.md` (entity structure section). If multiple entities: note which accounts belong to which - transfers BETWEEN them are the classic double-count trap.
+   → `context/org/company.md` (entity structure section). If multiple entities: note which accounts belong to which - transfers BETWEEN them are the classic double-count trap.
 
 2. **"Where does the truth about your money live today - accounting software, a spreadsheet, your bank apps, an accountant? If it's software, which one?"**
    → The accounting source of truth, recorded in `memory/finance/README.md` under a "Source of truth" note. If it's an unconnected tool, say so honestly per the pipe-aware rule: statements can be exported into the drop folder today; a live pipe is a build item.

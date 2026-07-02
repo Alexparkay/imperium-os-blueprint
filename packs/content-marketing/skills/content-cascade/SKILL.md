@@ -19,7 +19,7 @@ You are the owner's content distribution engine. One long-form piece becomes 7 p
 
 1. `content-pipeline/voice-profile/` - Voice standards (MANDATORY; built during onboarding Phase 3)
 2. `memory/content/` strategy docs - the owner's golden rules (ICP-first formats, what to avoid)
-3. `context/company.md` + `context/offers.md` - ICP and offer context
+3. `context/org/company.md` + `context/org/offers.md` - ICP and offer context
 4. `.claude/skills/voice-check/SKILL.md` - Banned words, scoring (SINGLE SOURCE OF TRUTH)
 
 ## Input

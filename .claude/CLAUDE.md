@@ -34,6 +34,7 @@ Rules live in two tiers (see `.claude/rules/INDEX.md`): always-on files in `.cla
 16. **Task completion comms:** significant task done → notify via `node scripts/notify.js` (read `rules-import/12`); task/deadline changes → sync `memory/kanban.md` + `memory/calendar.md` (read `rules-import/16`).
 17. **AI image/video of the owner** → configured Soul ID `{{OWNER_SOUL_ID}}`, optional Higgsfield module (read `rules-import/26`).
 18. **Optional comms modules:** WhatsApp → MCP tools only, never SQL (read `rules-import/14`); Telegram queries → run on-demand sync first (read `rules-import/23`).
+19. **Org mode: `context/org/` is read-only** - propose changes via `memory/org-proposals/`, never edit the mirror (read `rules-import/32`).
 
 ## Memory write targets
 

@@ -46,7 +46,7 @@ OWNER AESTHETIC - configure me
 
 Rules for the aesthetic block:
 
-- Unspecified on-image text derives from the owner's identity and goals (`context/company.md`), never fabricated numbers, never anything on the privacy list (rule 13).
+- Unspecified on-image text derives from the owner's identity and goals (`context/org/company.md`), never fabricated numbers, never anything on the privacy list (rule 13).
 - Remove third-party logos by default.
 
 ## Reference images

@@ -188,7 +188,7 @@ Then do the work:
 
 ## Phase 2 - Business context
 
-**Goal:** the 7-question interview. Output: `context/company.md`, `context/offers.md`, `context/glossary.md`, `Home.md` filled in.
+**Goal:** the 7-question interview. Output: `context/org/company.md`, `context/org/offers.md`, `context/org/glossary.md`, `Home.md` filled in.
 
 Ask, one at a time (acknowledge each answer before the next):
 
@@ -204,9 +204,9 @@ If their answers used company-specific terms (product names, internal shorthand)
 
 Then do the work:
 
-- Write `context/company.md` (what the company is, who works there, positioning, the NOT list, guardrails).
-- Write `context/offers.md` (each offer: who it's for, what it includes, price if given).
-- Write `context/glossary.md` (terms + one-line definitions).
+- Write `context/org/company.md` (what the company is, who works there, positioning, the NOT list, guardrails).
+- Write `context/org/offers.md` (each offer: who it's for, what it includes, price if given).
+- Write `context/org/glossary.md` (terms + one-line definitions).
 - Fill in `Home.md` with their actual domains.
 - Run the placeholder pass again for `{{COMPANY_ONE_LINER}}`, `{{ICP}}`, `{{OFFER}}` (same procedure and exclusions as Phase 1). Report files touched.
 - **Read their context back to them** as a tight summary and ask: "Anything wrong or missing?" Fix before moving on.

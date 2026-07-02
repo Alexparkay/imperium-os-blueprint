@@ -32,7 +32,7 @@ Setting up the command centre for a client, a new business unit, or a buyer of t
 7. **Constraints:** anything the system must never do (compliance, tone, irreversible actions).
 
 ## What it generates
-1. **Context spine** - `context/index.md`, `context/company.md`, `context/offers.md`, `context/glossary.md` filled from answers (the canonical pointer sheet).
+1. **Context spine** - `context/index.md`, `context/org/company.md`, `context/org/offers.md`, `context/org/glossary.md` filled from answers (the canonical pointer sheet).
 2. **Memory pipeline** - empty `memory/raw/`, `memory/wiki/` with index stubs.
 3. **Starter skills** - 3-5 skills built from Q5 via the skill-creator pattern (one real task each), not 20.
 4. **Cadence** - note which skills are on-demand vs scheduled; wire `/schedule` only after the skill works manually.

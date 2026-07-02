@@ -33,10 +33,10 @@ Regenerate: `node scripts/generate-registry.js` · Generated: 2026-07-02
 - **wispr-corrections** - Transcription error correction dictionary for voice-to-text input (Wispr Flow or similar). Used by braindump-router skill during Step 1 (Clean). Contains proper…
 - **youtube-research** - Full YouTube video research workflow - transcribe via Apify, extract key insights, save findings to memory, and optionally create content briefs. Use when the o…
 
-## Rules (13 always-on · 17 import · 6 user-global)
+## Rules (13 always-on · 18 import · 6 user-global)
 
 - Always-on (.claude/rules/): 02-subagent-context · 03-memory-persistence · 04-skill-routing · 10-quality-gate · 11-anti-ai-slop · 13-owner-privacy · 17-concise-chat · 18-braindump-first · 19-research-empirical-claims · 20-contrarian-default · 27-tool-recommendation-discipline · 28-what-would-change-my-mind · 31-financial-accuracy
-- Import (.claude/rules-import/): 01-youtube-apify · 05-content-voice · 06-always-push-deploy · 07-media-hub-auto-save · 08-google-workspace-gws-cli · 09-google-docs-formatting · 12-notify-owner · 14-whatsapp-query · 15-conversational-copy-mode · 16-kanban-calendar-sync · 21-no-large-local-downloads · 22-media-storage · 23-telegram-on-demand-sync · 24-pdf-and-markdown-links · 25-voice-calibration · 26-owner-likeness-generation · 30-excalidraw-and-artifact-links
+- Import (.claude/rules-import/): 01-youtube-apify · 05-content-voice · 06-always-push-deploy · 07-media-hub-auto-save · 08-google-workspace-gws-cli · 09-google-docs-formatting · 12-notify-owner · 14-whatsapp-query · 15-conversational-copy-mode · 16-kanban-calendar-sync · 21-no-large-local-downloads · 22-media-storage · 23-telegram-on-demand-sync · 24-pdf-and-markdown-links · 25-voice-calibration · 26-owner-likeness-generation · 30-excalidraw-and-artifact-links · 32-org-context
 - User-global (~/.claude/rules/): 11-anti-ai-slop · 17-concise-chat · 19-research-empirical-claims · 20-contrarian-default · 27-tool-recommendation-discipline · 28-what-would-change-my-mind
 - Tiers + triggers: `.claude/rules/INDEX.md`
 
@@ -47,3 +47,12 @@ Regenerate: `node scripts/generate-registry.js` · Generated: 2026-07-02
 ## Automations (2 active dirs in automations/, excl. lib/, _archive/)
 
 `notify` · `youtube`
+
+## Warnings (fix these)
+
+- rule 11-anti-ai-slop.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
+- rule 17-concise-chat.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
+- rule 19-research-empirical-claims.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
+- rule 20-contrarian-default.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
+- rule 27-tool-recommendation-discipline.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
+- rule 28-what-would-change-my-mind.md differs from the user-global ~/.claude/rules/ copy - project copy is canonical for this folder; reconcile (do not blindly delete either)
