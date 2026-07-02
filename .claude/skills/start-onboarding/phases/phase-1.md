@@ -2,6 +2,8 @@
 
 **Goal:** know who they are, what kind of seat this is, who ACTUALLY sits in it, and fill the identity placeholders across the whole system.
 
+**If Phase 0 found a provisioned `imperium-user.json`:** you already hold name, role, company, and department. Confirm them in one line rather than asking cold ("You're [name], [role] at [company], running [department] - right?"), fill the matching placeholders from those values, and drop straight to the questions it did NOT answer: the real-operator check (3), email (5), and anything below. Never re-ask what the file already told you.
+
 Ask, one at a time:
 
 ## 1. Name

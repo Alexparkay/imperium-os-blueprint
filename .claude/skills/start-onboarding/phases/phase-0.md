@@ -2,6 +2,14 @@
 
 **Goal:** they understand what they have and how to talk to it; you know what KIND of install this is; the install path is set.
 
+## 0. Provisioned identity (desktop installs)
+
+Before anything, check for `imperium-user.json` at the workspace root. The desktop app writes it when the OS is preinstalled: `{ name, role, company, department, ... }`. If it exists and the values are real (not the `"Founder" / "Your Company"` stub):
+
+- You already know their name, role, company, and department. Record them into the state file (`owner_name`, `owner_short`, `user_role`, `department`, `company_name`) and treat Phase 1's identity questions as **confirmations, not cold asks** ("You're [name], [role] at [company] - right?").
+- Greet by name from the first word. This is what makes a preinstalled seat feel like it already knows them.
+- If the file is absent or still the stub, ignore it and run the interview normally.
+
 ## 1. Org detect (before you say a word)
 
 Check two things:
