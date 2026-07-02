@@ -54,11 +54,11 @@ That starts a guided setup. If you ever get interrupted, come back and type **"c
 ## What the first hour looks like
 
 1. A two-minute tour (you just read most of it).
-2. It asks your name, company, and what to keep private.
-3. A short interview about what your company does and who you sell to.
+2. It asks your name, your role, who actually sits in this chat most days, and what to keep private.
+3. A short interview about the company and your corner of it: what you sell, your numbers, what you sign off yourself.
 4. You paste in 2 or 3 things you've written, so everything it drafts sounds like you.
 5. You plug in the tools you already use, one at a time. It tests each one.
-6. You pick 3 to 5 weekly tasks and watch it do them for real.
+6. It offers your department's pre-built skill pack, then you pick 3 to 5 weekly tasks and watch it do them for real.
 7. It writes your week-one plan and hands you the keys.
 
 One question at a time, plain English throughout, and a progress page (`docs/setup-status.html`, opens in your browser) that fills in as you go.

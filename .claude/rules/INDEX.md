@@ -9,15 +9,16 @@ created: 2026-06-11
 
 Rules live in two physical tiers (plus deterministic hook enforcement):
 
-- **always** - file lives in `.claude/rules/` and auto-loads every session (13 files)
-- **import** - file lives in `.claude/rules-import/` and does NOT auto-load. CLAUDE.md's hard-rules list carries the one-line trigger; READ the file when the trigger fires
+- **always** - file lives in `.claude/rules/` and auto-loads every session (14 files)
+- **import** - file lives in `.claude/rules-import/` and does NOT auto-load. The hard-rules list in `00-engine-core.md` carries the one-line trigger; READ the file when the trigger fires
 - **hook** - deterministic enforcement wired in `.claude/settings.json`: rule 01 (PreToolUse on WebFetch + Agent), rule 08 (MCP deny list), anti-fold (Stop), braindump (UserPromptSubmit), protected files (PreToolUse on Edit/Write), org-sync (SessionStart, rule 32's refresh)
 
-Numbering is inherited from the parent OS, so numbers are sparse. The number is an ID, not a count.
+Numbering is inherited from the parent OS, so numbers are sparse. The number is an ID, not a count. Rule 00 is native to this product: it carries the engine-class instructions that used to live in CLAUDE.md (the engine/seed split - see docs/ARCHITECTURE.md, "Engine vs seed files").
 
 | # | Rule | Tier | Trigger → read when |
 |---|---|---|---|
-| 01 | youtube-apify | import + hook | Any YouTube URL/task. Command is in CLAUDE.md rule 1; hooks block violations |
+| 00 | engine-core | always | - (hard rules, dev rules, key paths - the stable half of CLAUDE.md) |
+| 01 | youtube-apify | import + hook | Any YouTube URL/task. Command is in engine-core rule 1; hooks block violations |
 | 02 | subagent-context | always | - |
 | 03 | memory-persistence | always | - |
 | 04 | skill-routing | always | - |
@@ -51,7 +52,7 @@ Numbering is inherited from the parent OS, so numbers are sparse. The number is 
 
 ## Maintenance rules for this index
 
-- A rule's file location IS its tier. If you move a rule, update this table and CLAUDE.md's hard-rules list in the same commit.
+- A rule's file location IS its tier. If you move a rule, update this table and the hard-rules list in `00-engine-core.md` in the same commit.
 - New rules default to **import** tier unless they must shape every single response (the bar for always-on is high).
 - The 6 anti-sycophancy rules (11, 17, 19, 20, 27, 28) ship as project rules. If the owner later wants them across ALL their projects, copy them to `~/.claude/rules/` and DELETE the project copies (duplication drifts).
 - `node scripts/os-lint.js` checks this table against disk and flags drift.

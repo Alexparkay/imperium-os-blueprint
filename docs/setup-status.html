@@ -18,9 +18,13 @@
     #current-focus                       one-line current activity
     #last-updated                        date text
     span[data-field="company-name"]      set during Phase 1
+    span[data-field="role"]              seat holder's role, set during Phase 1
+    span[data-field="department"]        seat's department, set during Phase 1 ("whole company" for owner/solo)
+    #org-mode                            text: "Solo install" | "First seat of your company" | "Org seat - shared company truth"
     li.phase[data-phase] data-status     pending | current | done
     li.phase .fill style width           0% | 50% | 100%
     .connector[data-name] data-status    pending | connected | skipped | deferred | optional
+    .pack[data-name] data-status         available | recommended | installed | declined
 -->
 <style>
   :root{
@@ -202,6 +206,25 @@
   .connector[data-status="connected"] .cchip{color:#7dd3a8;background:rgba(76,183,130,.1);border-color:rgba(76,183,130,.3)}
   .connector[data-status="connected"] .cchip::before{content:"Connected"}
 
+  /* ---------- packs (mirror the connector cards) ---------- */
+  .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px}
+  .pack{
+    display:flex;align-items:center;gap:12px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:11px;padding:13px 15px;
+  }
+  .pack[data-status="available"]   .cchip::before{content:"Available"}
+  .pack[data-status="available"]   .dot{background:#3a4350}
+  .pack[data-status="recommended"] .cchip::before{content:"Recommended"}
+  .pack[data-status="recommended"] .cchip{color:var(--accent);background:var(--accent-soft);border-color:rgba(76,183,130,.35)}
+  .pack[data-status="recommended"] .dot{background:var(--accent)}
+  .pack[data-status="installed"]   .cchip::before{content:"Installed"}
+  .pack[data-status="installed"]   .cchip{color:#7dd3a8;background:rgba(76,183,130,.1);border-color:rgba(76,183,130,.3)}
+  .pack[data-status="installed"]   .dot{background:var(--accent);box-shadow:0 0 10px rgba(76,183,130,.7)}
+  .pack[data-status="declined"]    .cchip::before{content:"Declined"}
+  .pack[data-status="declined"]{opacity:.55}
+
   /* ---------- footer ---------- */
   footer{
     margin-top:34px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
@@ -218,6 +241,7 @@
     <div>
       <h1>Setup Progress</h1>
       <p class="sub">Installing the operating system for <b><span data-field="company-name">your company</span></b></p>
+      <p class="meta">Seat: <span data-field="role">not set yet</span> · <span data-field="department">department not set</span> · <span id="org-mode">install type not detected yet</span></p>
       <p class="meta">Last updated: <span id="last-updated">not started yet</span></p>
     </div>
     <div class="ring-block">
@@ -258,7 +282,7 @@
           <div class="num"><span>1</span></div>
           <div>
             <div class="name">Identity</div>
-            <div class="desc">Your name, company, email, and your privacy list.</div>
+            <div class="desc">Who you are, your role, who runs this chat, and your privacy list.</div>
             <div class="track"><div class="fill" style="width:0%"></div></div>
           </div>
           <div class="chip"></div>
@@ -267,7 +291,7 @@
           <div class="num"><span>2</span></div>
           <div>
             <div class="name">Business context</div>
-            <div class="desc">A short interview: what you do, who you sell to, the lines you never cross.</div>
+            <div class="desc">The company and your seat: what you do, who you sell to, your numbers and boundaries.</div>
             <div class="track"><div class="fill" style="width:0%"></div></div>
           </div>
           <div class="chip"></div>
@@ -294,7 +318,7 @@
           <div class="num"><span>5</span></div>
           <div>
             <div class="name">First skills</div>
-            <div class="desc">3 to 5 of your weekly tasks, automated and run for real.</div>
+            <div class="desc">Your department pack, plus 3 to 5 weekly tasks automated and run for real.</div>
             <div class="track"><div class="fill" style="width:0%"></div></div>
           </div>
           <div class="chip"></div>
@@ -391,6 +415,44 @@
     </section>
 
   </div>
+
+  <section class="card" style="margin-top:20px">
+    <h2>Department packs</h2>
+    <div class="packs">
+      <div class="pack" data-name="content-marketing" data-status="available">
+        <div class="dot"></div>
+        <div class="cinfo">
+          <div class="cname">Content &amp; marketing</div>
+          <div class="cdesc">The full content department: research, packaging, repurposing.</div>
+        </div>
+        <div class="cchip"></div>
+      </div>
+      <div class="pack" data-name="finance" data-status="available">
+        <div class="dot"></div>
+        <div class="cinfo">
+          <div class="cname">Finance</div>
+          <div class="cdesc">Penny-accurate audits and clear sign-off thresholds.</div>
+        </div>
+        <div class="cchip"></div>
+      </div>
+      <div class="pack" data-name="ops" data-status="available">
+        <div class="dot"></div>
+        <div class="cinfo">
+          <div class="cname">Operations</div>
+          <div class="cdesc">Meetings to actions, SOPs, vendors, the weekly pulse.</div>
+        </div>
+        <div class="cchip"></div>
+      </div>
+      <div class="pack" data-name="sales-crm" data-status="available">
+        <div class="dot"></div>
+        <div class="cinfo">
+          <div class="cname">Sales &amp; CRM</div>
+          <div class="cdesc">Prospect dossiers and outreach that reads human.</div>
+        </div>
+        <div class="cchip"></div>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="fbrand">Imperium OS · Built by Imperium Growth</div>

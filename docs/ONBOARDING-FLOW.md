@@ -4,11 +4,27 @@ product: Imperium OS
 type: maintainer-doc
 audience: installers and maintainers
 created: 2026-06-11
+updated: 2026-07-02
 ---
 
 # Onboarding Flow (source of truth)
 
-This is the maintainer's view of the guided onboarding. The executable version lives at `.claude/skills/start-onboarding/SKILL.md`; if the two ever disagree, fix the skill to match this document, then commit both together.
+This is the maintainer's view of the guided onboarding, v2: role-aware and org-aware. The executable version lives at `.claude/skills/start-onboarding/` (a dispatcher `SKILL.md` plus per-phase scripts and role cards); if the two ever disagree, fix the skill to match this document, then commit both together.
+
+## The skill's shape
+
+```
+.claude/skills/start-onboarding/
+  SKILL.md          dispatcher: state contract, tone rules, status-page contract,
+                    resume logic, phase map, role-card map, placeholder-pass procedure
+  phases/
+    phase-0.md .. phase-7.md    one script per phase, read on entry (keeps the
+                                always-loaded surface small)
+  roles/
+    owner.md marketing.md ops.md finance.md assistant.md
+```
+
+Each role card carries three sections consumed by three phases: the Phase 2 seat-interview questions, the Phase 4 recommended connectors (with pre-written benefit sentences), and the Phase 5 first-task suggestions + department pack recommendation.
 
 ## Design principles
 
@@ -16,19 +32,64 @@ This is the maintainer's view of the guided onboarding. The executable version l
 - **The user never touches a terminal.** Claude runs every command and reports results in plain English.
 - **Verify before advancing.** A connector is not "done" because the steps were followed; it's done when its test passes.
 - **Multi-session safe.** All progress lives in `memory/onboarding-state.md`. Any trigger phrase resumes from the recorded phase.
-- **Visible progress.** `docs/setup-status.html` is updated after every phase and every connector. It's the non-technical user's window into setup.
+- **Visible progress.** `docs/setup-status.html` is updated after every phase and every connector or pack change.
 - **Momentum beats completeness.** Anything that fails twice gets deferred with a note, not debugged in front of the user.
-- **Use the wait.** Whenever the user is off doing a browser step, Claude works in parallel: background installs, pre-staged `.env` lines, prepared verification commands, slow verifies started as background tasks while the conversation moves to the next connector. The user never watches a progress bar.
+- **Use the wait.** Whenever the user is off doing a browser step, Claude works in parallel: background installs, pre-staged `.env` lines, prepared verification commands. The user never watches a progress bar.
+- **Onboard the seat, not just the signature.** The buyer, the seat holder, and the daily operator can be three different people. The flow detects each and fits itself to the person actually in the chair.
 
 ## Trigger phrases
 
-`I've just installed this, let's start` · `let's start` · `start onboarding` · `/start` · `start setup` · `set this up` · `continue onboarding` · `where were we` · `resume setup`
+`I've just installed this, let's start` · `let's start` · `start onboarding` · `/start` · `start setup` · `set this up` · `continue onboarding` · `where were we` · `resume setup` · `onboard [name]` (operator sub-onboarding)
 
 On any trigger: read `memory/onboarding-state.md` first. Missing file = fresh run from Phase 0. Existing file = resume at `current_phase`. `status: complete` = onboarding over; don't re-run unless asked.
 
+## Org-detect logic (Phase 0)
+
+Before the welcome, the skill checks two signals:
+
+1. `ORG_CONTEXT_REPO` set in the root `.env` (equivalently: `node scripts/org-sync.js --status` reports a repo URL).
+2. `context/org/company.md` carries real content rather than template state (`status: template` frontmatter or surviving `{{...}}` tokens = template-fresh).
+
+Either signal filled → `org_mode: org-joining`: the OS greets already knowing the company ("this hour is about YOU: your seat, your voice, your tools") and Phase 2 confirms org truth instead of re-interviewing it. Both template-fresh → `org_mode: solo-or-first-seat`, a provisional value that Phase 1 resolves to `solo` or `org-first-seat` (by asking whether other people will get their own seat).
+
+In org-joining mode, `context/org/` is a read-only mirror (rule 32): the flow never edits it; corrections become proposals in `memory/org-proposals/`.
+
+## The role-card system (Phase 1)
+
+Phase 1's role question records `user_role_type` (owner | department-head | operator-for-someone | solo) and `department`, which select a card:
+
+| user_role_type / department | Card |
+|---|---|
+| owner, solo | `roles/owner.md` |
+| department-head: marketing / content / brand / growth | `roles/marketing.md` |
+| department-head: ops / delivery / production | `roles/ops.md` |
+| department-head: finance | `roles/finance.md` |
+| operator-for-someone | `roles/assistant.md` |
+| department-head: anything else | nearest card by what the seat produces + a "bespoke role card" note in the state file |
+
+## The real-operator rule (Phase 1, enforced in Phase 7)
+
+Phase 1 always asks: **"Who will actually sit in this chat most days - you, or someone who runs things for you?"** This exists because of a real deal where the contract signer was not the daily user, and the daily user (an assistant) had been scoped out entirely - it nearly cost adoption.
+
+If someone else is named: their name + role land in `context/seat.md` ("The real operator") and in the state file (`real_operator`, `status: pending`), plus a pending item "operator sub-onboarding: [name]". While that item is pending, **the Phase 7 health baseline may not score Context above 7/10** - the cap and its unlock (a 20-minute sub-onboarding, trigger "onboard [name]", spec at the bottom of `phases/phase-7.md`) are stated to the user in plain terms.
+
 ## State file
 
-`memory/onboarding-state.md`. Holds: current phase, phase log, all interview answers, the privacy list, the connector table (status + verification evidence + date), Phase 5 task candidates, skills built, and notes for the next session. Updated after every phase and every connector. The skill defines the exact format.
+`memory/onboarding-state.md`. The exact template lives in the skill's `SKILL.md`. Keys, v2 additions marked:
+
+- Phase log (0-7, status + date)
+- `owner_name`, `owner_short`, `user_role`, `company_owner`, `company_name`, `team_users`, `currency`, `brand_assets`, `voice_split`, `owner_email`, `location`, `timezone`, `company_one_liner`, `icp`, `offer`, `repo_path`
+- **`user_role_type`** (owner | department-head | operator-for-someone | solo) *(v2)*
+- **`department`** *(v2)*
+- **`org_mode`** (solo-or-first-seat → solo | org-first-seat; or org-joining) *(v2)*
+- **`real_operator`** (name/role + status: none | pending | onboarded) *(v2)*
+- **`approval_boundary`** (one line; detail in `context/seat.md`) *(v2)*
+- **`os_name`** *(v2)*
+- Privacy list
+- **Pending items** (e.g. operator sub-onboarding) *(v2)*
+- Connector table (status + verification evidence + date)
+- **Packs: `packs_installed` / `packs_declined`** *(v2)*
+- Weekly task candidates, first skills built, notes for next session
 
 ## Placeholder lifecycle
 
@@ -36,101 +97,105 @@ On any trigger: read `memory/onboarding-state.md` first. Missing file = fresh ru
 |---|---|---|
 | `{{REPO_PATH}}` | Phase 0 (auto-detected) | everywhere |
 | `{{OWNER_NAME}}` `{{OWNER_SHORT}}` `{{OWNER_ROLE}}` `{{COMPANY_NAME}}` `{{OWNER_EMAIL}}` `{{LOCATION}}` `{{TIMEZONE}}` | Phase 1 | everywhere |
-| `{{CCY}}` | Phase 2 (offer question collects the currency) | finance-audit skill |
-| `{{BRAND_PRIMARY}}` `{{BRAND_NEUTRALS}}` `{{BRAND_FONTS}}` | Phase 3 (brand-assets question; default "not set - ask the owner") | presentation-builder |
-| `{{DEPLOY_TARGET}}` | Phase 4 end-sweep (default: `none configured (local only)` - it sits in always-loaded instructions, a literal token must never survive onboarding) | CLAUDE.md, deploy rule |
-| `{{FOLDER_*}}` (media hub) | google-workspace connector, media-hub setup step; dormant if skipped | media-hub skill |
-| `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}` | Phase 2 | everywhere |
+| `{{OS_NAME}}` | Phase 1 (the naming question; offered default: company name + " OS") | context/identity.md |
+| `{{CCY}}` | Phase 2 (offer question collects the currency) | finance skills |
+| `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}` | Phase 2 (Branch A; org-joining seats inherit them via the pre-filled org files) | everywhere |
 | `{{VOICE_SAMPLE}}` | Phase 3 | everywhere |
+| `{{BRAND_PRIMARY}}` `{{BRAND_NEUTRALS}}` `{{BRAND_FONTS}}` | Phase 3 (brand-assets question; default "not set - ask the owner") | presentation-builder |
 | `{{NOTIFY_CHANNEL}}` | Phase 4 (Telegram step) | everywhere |
+| `{{DEPLOY_TARGET}}` | Phase 4 end-sweep (default: `none configured (local only)` - the shipped deploy rule already carries the default; the sweep row exists so a literal token can never survive onboarding) | deploy rule (`rules-import/06`) |
+| `{{MEDIA_STORE}} (and {{MEDIA_HUB_DRIVE_ID}} if Drive media saving is wanted)` | Phase 4 (optional Dropbox / media-hub steps) | everywhere |
+| `{{FOLDER_*}}` (media hub) | google-workspace connector, media-hub setup step; dormant if skipped | media-hub skill |
 | `{{OWNER_SOUL_ID}}` | Phase 4 (optional Higgsfield step) | everywhere |
-| `{{MEDIA_STORE}} (and {{MEDIA_HUB_DRIVE_ID}} if Drive media saving is wanted)` | Phase 4 (optional Dropbox step) | everywhere |
-| `{{OS_NAME}}` | not collected yet - a planned naming question fills it; until then `context/identity.md`'s fallback wording ("your operating system") applies | context/identity.md |
 | `{{OWNER_SOUL_CINEMATIC_ID}}` `{{OWNER_WARDROBE_STYLE}}` `{{OWNER_COLOR_PALETTE}}` `{{OWNER_PHYSIQUE_NOTES}}` `{{OWNER_ACCESSORIES}}` `{{OWNER_AESTHETIC_AVOID}}` `{{OWNER_TEXT_DEFAULTS}}` | Phase 4 (optional Higgsfield step, alongside `{{OWNER_SOUL_ID}}`); dormant if skipped | owner-likeness rule (`rules-import/26`) |
+| `{{DEPARTMENT}}` | Phase 2 (departments interview / seat interview) | context/org/departments.md |
 | `{{BANK_*}}` `{{COMPETITOR_CHANNEL_*}}` | at pack install (`node scripts/install-pack.js <pack>`), by the pack's own setup questions; dormant until then | finance-audit / video-score pack skills |
 
-Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the start-onboarding skill itself, because they document the tokens. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user.
+Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the entire start-onboarding skill directory (`.claude/skills/start-onboarding/`), because they document the tokens. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user. `scripts/package-check.js` enforces this lifecycle: tokens outside this table warn in template mode, and in `--client` mode any surviving token outside the documenting files fails the build.
 
 ## The phases
 
-### Phase 0 - Welcome + tour
+### Phase 0 - Welcome + tour + org detect
 
-- **Goal:** the user understands chat/memory/skills and the 7 daily folders; install path is set.
+- **Goal:** install type detected; the user understands chat/memory/skills and the folders; install path set.
+- **Branch:** org-detect (above) picks the greeting - standard welcome, or the "click into place" greeting for org-joining seats.
 - **Questions:** 1 ("Shall we start?").
-- **Actions:** deliver welcome + folder tour; explain brain dumps are fine; detect repo path and replace `{{REPO_PATH}}`; start the `automations/youtube` dependency install as a background task; create state file; first status-page update; offer to open the status page in the browser.
-- **Outputs:** `memory/onboarding-state.md`; `{{REPO_PATH}}` resolved.
-- **Exit criteria:** state file exists; status page shows Phase 0 done; user consented to continue.
+- **Actions:** welcome + folder tour (org-joining adds one line about the shared, propose-upward org files); detect repo path and replace `{{REPO_PATH}}`; start the `automations/youtube` dependency install in the background; create the state file with `org_mode`; first status-page update (org-mode indicator set if already known); offer to open the page.
+- **Exit criteria:** org mode recorded; state file exists; status page current; user consented.
 
-### Phase 1 - Identity
+### Phase 1 - Identity + role + real operator
 
-- **Goal:** the system knows who it works for; identity placeholders filled repo-wide.
-- **Questions:** 6 (full name → confirm short name; **role: their company or someone else's** → `user_role`/`company_owner`; company - with the multi-company branch: HOME company + `context/<venture>.md` per extra venture; email; location + timezone incl. travel mode; privacy list).
-- **Actions:** write privacy list into the owner-privacy rule (`.claude/rules/13-owner-privacy.md`); run the placeholder pass for the six identity tokens; verify by re-grep; report files touched.
-- **Outputs:** privacy list persisted; six tokens replaced everywhere.
-- **Exit criteria:** re-grep clean; files-touched report delivered; state + status page updated.
+- **Goal:** the system knows whose seat this is, what kind of seat it is, and who actually operates it; identity placeholders filled repo-wide.
+- **Questions:** 7 - name; role (the four-way taxonomy, with department follow-up and, for operator seats, the relayed-instruction calibration); **the real-operator question (mandatory)**; company (multi-venture branch: HOME company + `context/<venture>.md` per extra venture; plus the 10-second naming beat → `os_name`); email; location + timezone (travel mode); privacy list.
+- **Branch:** resolves provisional `org_mode`; selects the role card; a named non-user operator creates the pending sub-onboarding item.
+- **Actions:** privacy list → `.claude/rules/13-owner-privacy.md`; fill `context/seat.md` (who sits here + real operator); replace `{{OS_NAME}}` in `context/identity.md`; placeholder pass for the seven identity tokens; verify by re-grep; report files touched; status page gets company name, role, department, org-mode.
+- **Exit criteria:** role card selected; real-operator answer recorded; re-grep clean; report delivered; state + status page updated.
 
-### Phase 2 - Business context
+### Phase 2 - Business context (company + seat)
 
-- **Goal:** the 7-question interview; the context spine exists.
-- **Questions:** 7 (company in two sentences; ICP; offers; positioning + NOT list; weekly check-in places; 3-5 weekly time-eating tasks; hard constraints) + optional glossary follow-up.
-- **Actions:** write `context/org/company.md`, `context/org/offers.md`, `context/org/glossary.md`; fill `Home.md`; replace `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`; read the summary back for correction. Questions 5 and 6 are collected lightly here and consumed by Phases 4 and 5.
-- **Outputs:** four context files; three tokens replaced.
-- **Exit criteria:** owner confirmed the read-back summary; state + status page updated.
+- **Goal:** the system knows the company AND this seat's corner of it.
+- **Branch A (solo / org-first-seat):** the 7-question company interview (one-liner + team; ICP; offers + currency; positioning + NOT list; weekly check-in places; weekly time-eaters + incoming requests; guardrails) + optional glossary follow-up → writes `context/org/company.md`, `offers.md`, `glossary.md`, `departments.md`, fills `Home.md`, replaces `{{COMPANY_ONE_LINER}}` `{{ICP}}` `{{OFFER}}`, reads the summary back.
+- **Branch B (org-joining):** read back the pre-loaded org truth (one-liner, their department's row, key glossary terms) for confirmation - ~2 minutes; corrections filed to `memory/org-proposals/` per rule 32, never edited into the mirror; the weekly-places and weekly-tasks questions still run, scoped to the seat.
+- **Both branches, then:** the **seat interview** from the role card - department mission, KPIs, who the seat answers to, who lands requests on it, approval boundary → `context/seat.md` + `approval_boundary` in state; seat summary read back.
+- **Exit criteria:** branch outputs written (or confirmed); seat file filled and confirmed; state + status page updated.
 
 ### Phase 3 - Voice
 
-- **Goal:** output sounds like the owner.
-- **Questions:** 3 (personal-vs-published voice → `voice_split`, with `brand-voice.md` TODO slot when split; paste 2-3 writing samples; brand colours/fonts → `{{BRAND_*}}` or safe default) + 1 live-test reaction ("does this sound like you?").
-- **Actions:** save samples to `content-pipeline/voice-profile/sample-NN.md`; build `voice-guide.md` (cadence, vocabulary, sign-offs, banned words); replace `{{VOICE_SAMPLE}}`; draft a real 3-line email in their voice; iterate on their correction.
-- **Outputs:** samples + voice guide; token replaced.
-- **Exit criteria:** live test approved by the owner.
+- **Goal:** output sounds like the person in the chair (the daily operator owns the voice; a pending operator inherits a TODO in their sub-onboarding).
+- **Questions:** 3 (personal-vs-published voice → `voice_split`, with `brand-voice.md` TODO slot when split; paste 2-3 writing samples; brand colours/fonts → `{{BRAND_*}}` or safe default) + 1 live-test reaction.
+- **Actions:** samples → `content-pipeline/voice-profile/sample-NN.md`; build `voice-guide.md`; replace `{{VOICE_SAMPLE}}`; draft a real 3-line email; iterate on the correction.
+- **Exit criteria:** live test approved.
 
-### Phase 4 - Connections (the Four C's audit, C2)
+### Phase 4 - Connections (C2)
 
 - **Goal:** the tools they already use are plugged in, one at a time, each verified.
-- **Priority order:** GitHub backup → Google Workspace → Apify/YouTube → Telegram notify → optional (Dropbox/rclone, MCP servers, WhatsApp, Higgsfield). Order adapts to their actual stack from the Phase 2 audit.
-- **Opens with the team question** ("who else works in these tools?") → `team_users`; multi-seat is named honestly as a build-team item, never improvised.
-- **Per-connector loop:** PRE-WRITTEN one-sentence benefit (no improvised jargon) → "now, later, or skip?" → follow `docs/connectors/<name>.md` (user does browser steps, Claude does all commands and file edits) → run the guide's verification test → update state table + status-page card → next. Keys pasted in chat go straight to `.env` and are never echoed back.
-- **Failure policy:** two attempts, then `deferred` with a note. Resume any day with "let's finish setting up [name]".
-- **Outputs:** connector table fully resolved; `{{NOTIFY_CHANNEL}}` (and optionally `{{OWNER_SOUL_ID}}`, `{{MEDIA_STORE}}`) replaced.
-- **Exit criteria:** every connector is `connected`, `skipped`, or `deferred` by explicit owner choice; every `connected` row records the test that passed. May span multiple sessions.
+- **The menu:** `docs/connectors/INDEX.md` - every connector with benefit, key y/n, effort bucket (5 min / 15 min / build team), and per-role relevance. The plan = universal spine (github-backup → google-workspace) + the role card's picks filtered by Phase 2 answers. `org-sync`, `company-brain`, `worker` are named-not-run: install-team engagements.
+- **Opens with the team question** ("who else works in these tools?") → `team_users`. Multi-seat answer is now real: each person can get their own seat sharing org truth via `docs/connectors/org-sync.md` (install team) - noted in state, never improvised solo.
+- **Per-connector loop:** pre-written one-sentence benefit (no improvised jargon) → "now, later, or skip?" → follow `docs/connectors/<name>.md` (user does browser steps, Claude does all commands and edits) → run the guide's verification test → update state table + status card → next. Keys pasted in chat go straight to `.env` and are never echoed back.
+- **End-sweep:** project-wide `{{` grep resolved against the defaults table in `phases/phase-4.md`; decisions logged per token.
+- **Failure policy:** two attempts, then `deferred` with a note. May span multiple sessions.
+- **Exit criteria:** every connector `connected`/`skipped`/`deferred` by explicit choice; every `connected` row records the passed test; sweep logged.
 
-### Phase 5 - First skills (C3, Capabilities)
+### Phase 5 - First skills + packs (C3)
 
-- **Goal:** 3-5 real weekly tasks become skills, each run once on live input.
-- **Questions:** 1 (pick from the Phase 2 task list) + up to 3 clarifiers per skill (trigger, good result, output destination).
-- **Actions:** build each skill at `.claude/skills/<kebab-name>/SKILL.md` with auto-trigger description and guardrail-aware body; run it for real; fix the skill (not just the output) from the owner's reaction.
-- **Outputs:** 3-5 new skills, each with one real run behind it, each rowed into `.claude/reference/skills-routing-index.md`; client folders touched get STATUS.md stubs.
-- **Exit criteria:** owner has seen and reacted to every skill's output; `node scripts/generate-registry.js` warning list EMPTY; state + status page updated.
+- **Goal:** 3-5 real weekly tasks running as skills, each proven on live input; the department pack question answered.
+- **Pack offer first:** the role card names ONE pack + one-line pitch. Yes → `node scripts/install-pack.js <pack>`, then the pack's own questions (`packs/<pack>/onboarding.md`), then ONE pack skill walked on a real input as the first win; recorded in `packs_installed` + status card `installed`. No → `packs_declined` + card `declined`, no re-pitch that session. Multi-pack allowed, one recommended to start.
+- **Then build the rest:** pick from the Phase 2 task list; ≤3 clarifiers per skill; build at `.claude/skills/<kebab-name>/SKILL.md`; run for real; fix the skill from the reaction; row it into `.claude/reference/skills-routing-index.md`; STATUS.md stubs for touched client folders.
+- **Gate:** `node scripts/generate-registry.js` warning list EMPTY before leaving.
+- **Exit criteria:** 3-5 proven skills (pack skills count); routing complete; registry clean; pack offer resolved both places.
 
-### Phase 6 - Cadence + memory bootstrap (C4, Cadence)
+### Phase 6 - Cadence + memory bootstrap (C4)
 
 - **Goal:** run-rhythm decided; memory seeded.
 - **Questions:** 1 per skill (scheduled vs on-demand; recommend on-demand for week one) + 1 ("top 3 things on your plate this week?").
-- **Actions:** record `## Cadence` on each skill; seed `memory/kanban.md` and `memory/calendar.md`; explain the memory targets in plain English; run `node scripts/generate-registry.js`.
-- **Outputs:** cadence noted; kanban/calendar seeded; registry generated.
-- **Exit criteria:** registry build succeeds; state + status page updated.
+- **Actions:** `## Cadence` on each skill (pack skills included); seed `memory/kanban.md` + `memory/calendar.md` (pending operator item goes on the board); explain the memory targets; run the registry.
+- **Exit criteria:** cadence recorded; board seeded; registry clean.
 
 ### Phase 7 - Health baseline + graduation
 
-- **Goal:** measured starting point; clean handoff to daily use.
-- **Questions:** 0.
-- **Actions:** run `project-health` (Four C's scores out of 10) and record the baseline in `memory/system_changelog.md`; run `node scripts/os-lint.js` and fix trivial findings; write the 5-bullet week-one plan to the kanban; deliver the graduation message ("if you can't see it, just ask in the chat"); set state `status: complete`; status page to 100% with the completion banner (`<body data-complete="true">`).
-- **Exit criteria:** baseline recorded; lint run; plan on kanban; state complete; page at 100%.
+- **Goal:** measured starting point; clean handoff.
+- **Actions:** `project-health` Four C's baseline, **with the real-operator gate: Context capped at 7/10 while the operator sub-onboarding is pending** (cap + unlock stated to the user); baseline saved as the FIRST dated entry in `memory/system_changelog.md` (seat, org mode, scores, connectors, packs - never privacy-list items); `node scripts/os-lint.js` with trivial fixes applied; 5-bullet week-one plan (pending operator item outranks everything); org-first-seat installs get the org-repo reminder (`docs/connectors/org-sync.md`) in Notes for next session; graduation message; state `status: complete`; page to 100% + completion banner.
+- **After graduation:** "onboard [name]" runs the operator sub-onboarding (identity-lite, their voice profile, their view of the seat's boundaries) and lifts the Context cap - spec at the bottom of `phases/phase-7.md`.
+- **Exit criteria:** baseline in the changelog; gate applied if due; lint run; plan on the board; state complete; page at 100%.
 
 ## Status page contract
 
-The skill edits `docs/setup-status.html` directly. Stable hooks it relies on (do not rename without updating the skill):
+The skill edits `docs/setup-status.html` directly. Stable hooks (mirrored in the page's header comment and in the skill's SKILL.md - the three lists must match; do not rename without updating all three):
 
 - `li.phase[data-phase="0..7"]` with `data-status="pending|current|done"` and an inner `.fill` div whose inline `width` is the phase progress.
 - `#overall-ring` with inline `style="--p:N"` and `#overall-pct` text (N = completed/8 × 100, rounded to 0/13/25/38/50/63/75/88/100).
 - `#current-focus` one-line text.
 - `.connector[data-name="github-backup|google-workspace|apify-youtube|telegram-notify|dropbox-rclone|mcp-servers|whatsapp-mcp|higgsfield"]` with `data-status="pending|connected|skipped|deferred|optional"` (vocabulary matches the state-file connector table exactly - a parked connector renders as "Deferred", never as a blank chip).
-- `span[data-field="company-name"]` (set in Phase 1) and `#last-updated`.
+- `.pack[data-name="content-marketing|finance|ops|sales-crm"]` with `data-status="available|recommended|installed|declined"` (set `recommended` when the role card names it, `installed`/`declined` when Phase 5 resolves it).
+- `span[data-field="company-name"]`, `span[data-field="role"]`, `span[data-field="department"]` (all set in Phase 1; owner/solo seats show department "whole company").
+- `#org-mode` - exactly one of: "Solo install", "First seat of your company", "Org seat - shared company truth".
+- `#last-updated` date text.
 - `body[data-complete="true"]` reveals the completion banner.
 
 ## Maintainer notes
 
-- Keep the interview question wording in the skill; this doc describes intent, the skill owns the words.
-- If you add a connector: write the guide in `docs/connectors/`, add a row to the state-file template in the skill, add a card to the status page, and add it to the Phase 4 priority list. Four edits, always together.
+- Keep the interview question wording in the phase files; this doc describes intent, the skill owns the words.
+- If you add a connector: five edits, always together - guide in `docs/connectors/`, row in `docs/connectors/INDEX.md`, row in the state-file template (SKILL.md), card on the status page, mention in the right role cards.
+- If you add a role card: add it to the card map in SKILL.md and here, and give it all three sections (seat interview, connectors, first tasks + pack).
+- If you add a pack: it needs a status-page card, a row in the state file's Packs section, and a home in at least one role card's recommendation logic.
 - The quality bar for every user-facing sentence in this flow: a smart non-technical operator can act on it without a call.

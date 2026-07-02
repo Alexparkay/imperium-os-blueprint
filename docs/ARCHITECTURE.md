@@ -28,6 +28,15 @@ Claude's behaviour is shaped by instructions loaded at three depths:
 
 The tiers exist to manage one scarce resource: Claude's attention. Broad rules always loaded, deep rules loaded when relevant, workflows loaded when invoked.
 
+**Engine vs seed files.** Every path in the box belongs to one of two classes, and the split is the contract any updater (including the desktop app) must honour:
+
+- **Engine** - the product. Replaced wholesale by updates, never personalized: `.claude/skills/`, `.claude/rules/`, `.claude/rules-import/`, `.claude/hooks/`, `.claude/reference/`, `scripts/`, `dashboard/`, `brain/`, `automations/`, and the system docs in `docs/`.
+- **Seed** - this install. Written by onboarding and daily use, never touched by updates: `.claude/CLAUDE.md`, `context/`, `memory/`, `Home.md`, `content-pipeline/`, `packs/installed.json` (and everything an update doesn't explicitly own, e.g. `clients/` and `.env`).
+
+The always-on instruction layer straddles the line by design: `.claude/CLAUDE.md` is the seed shell (identity and context imports, the memory-targets table, `<!-- ENGINE-BOUNDARY -->` markers documenting the split), while the stable half - hard rules, development rules, key paths - lives in the engine-class rule `.claude/rules/00-engine-core.md`. An update can ship better hard rules without ever touching who the system works for.
+
+Three engine paths accumulate seed-written content and are **merge points, not replace points**, for any updater: `.claude/rules/13-owner-privacy.md` (onboarding writes the privacy list into it), `.claude/reference/skills-routing-index.md` (rows appended per built skill and installed pack), and `.claude/skills/` (installed pack skills are copied in; `packs/installed.json` records exactly which). An updater that clobbers these loses user data - preserve the recorded deltas.
+
 **Base vs department packs.** The live skill library starts as the ~21 engine skills every seat needs: memory, routing, quality control, research, client delivery. Department-specific workflows (content production, finance, ops, sales) ship as optional packs in `packs/` - each a bundle of skills, memory scaffolds, and templates with a manifest describing exactly what it adds. `node scripts/install-pack.js <pack>` copies a pack's skills into the live library, wires their routing, and records the install in `packs/installed.json`; uninstall reverses every byte of it. The point is per-seat leanness: a finance seat never carries YouTube packaging skills, and the routing index only ever lists workflows that can actually run. The pack spec lives at `packs/README.md`.
 
 ## 2. The memory system

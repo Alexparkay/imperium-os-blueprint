@@ -406,11 +406,12 @@ console.log('');
 
   if (CLIENT_MODE) {
     // Zero survivors outside the files that DOCUMENT the tokens.
-    const EXEMPT = new Set(['docs/ONBOARDING-FLOW.md', '.claude/skills/start-onboarding/SKILL.md']);
+    const EXEMPT = new Set(['docs/ONBOARDING-FLOW.md']);
+    const EXEMPT_PREFIXES = ['.claude/skills/start-onboarding/']; // the whole skill dir (dispatcher + phases/ + roles/) documents the token system
     let survivors = 0;
     for (const [t, occs] of inventory) {
       for (const o of occs) {
-        if (EXEMPT.has(o.file)) continue;
+        if (EXEMPT.has(o.file) || EXEMPT_PREFIXES.some((p) => o.file.startsWith(p))) continue;
         survivors++;
         fail(CHECK, `${o.file}:${o.line} - unreplaced placeholder {{${t}}} (client packages ship zero survivors)`);
       }
