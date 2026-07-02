@@ -170,7 +170,7 @@ Is the video a LISTICLE / RESEARCH ROUNDUP?
 ### Templated patterns (use these as starting points, fill the brackets)
 
 **Host-as-agent event/mastermind (the calibration sample case):**
-- `i locked [peer-tier] in a [room/villa/setting] and [verb] their [domain] with [tool] (raw, [runtime])`
+- `i locked [peer-tier] in a [room/house/setting] and [verb] their [domain] with [tool] (raw, [runtime])`
 - `i locked [peer-tier] in a room and they [verb] [their object] (raw)`
 
 **Tutorial / system reveal:**

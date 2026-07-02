@@ -295,6 +295,8 @@ Then do the work:
 
 1. Recall the Phase 2 task list. Ask: **"Of these, which 3 to 5 would save you the most pain if they ran themselves? Pick the ones you'd want working this week."**
 
+1b. **Check the department packs before building anything.** If a chosen task matches a skill in an uninstalled pack (scan `packs/*/pack.md` manifests against `packs/installed.json`), offer the pack instead of building from scratch: one sentence on what the pack adds, then, if they want it, run `node scripts/install-pack.js <pack>` and ask the pack's own questions from `packs/<pack>/onboarding.md`. An installed pack's skills count toward the 3-5 first skills; each still gets a real first run (step 2c). Declined packs get noted in the state file - never re-pitch in the same session.
+
 2. For each chosen task, in order, one at a time:
    - a. Clarify in at most 3 questions: What kicks it off? What does a good result look like? Where should the result go (a file, an email draft, a message)?
    - b. Build the skill at `.claude/skills/<kebab-case-name>/SKILL.md` with frontmatter (`name`, `description` containing the natural trigger phrases they'd actually say) and a stepwise body: inputs, steps, output location, what NOT to do (respect Phase 2 guardrails: nothing irreversible without sign-off).

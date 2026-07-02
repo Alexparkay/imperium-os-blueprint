@@ -48,7 +48,7 @@ node tools/higgsfield/higgsfield-cli.mjs <command> [options]
 #### Soul (Higgsfield's flagship image model)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs soul-image \
-  --prompt "A luxury villa overlooking the Mediterranean at golden hour, architectural photography" \
+  --prompt "A modern glass house overlooking the Mediterranean at golden hour, architectural photography" \
   --size 2048x1152 \
   --quality 1080p \
   --batch 1 \
@@ -149,8 +149,8 @@ node tools/higgsfield/higgsfield-cli.mjs speak \
 #### Frame-to-Video (generates start frame → end frame → video automatically)
 ```bash
 node tools/higgsfield/higgsfield-cli.mjs frame-to-video \
-  --start-prompt "Exterior view of a luxury villa at dawn, warm stone walls" \
-  --end-prompt "Interior view of the same villa, sunlight streaming through windows" \
+  --start-prompt "Exterior view of a modern lakeside house at dawn, warm stone walls" \
+  --end-prompt "Interior view of the same house, sunlight streaming through windows" \
   --video-prompt "Smooth cinematic transition from exterior to interior, camera glides through the entrance" \
   --size 2048x1152 \
   --quality 1080p \

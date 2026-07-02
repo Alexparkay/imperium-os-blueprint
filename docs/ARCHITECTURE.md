@@ -24,9 +24,11 @@ Claude's behaviour is shaped by instructions loaded at three depths:
 
 **Tier 2: on-demand rules.** `.claude/rules-import/` holds detailed rules that only matter in specific situations: how to format documents, how media storage works, how to handle large files. Tier 1 contains one-line pointers; the full rule is read only when the situation comes up. This keeps every session fast without losing depth.
 
-**Tier 3: skills.** `.claude/skills/` holds the workflow library. Each skill is a directory containing a `SKILL.md` with a frontmatter `description` and a stepwise body (`.claude/skills/<name>/SKILL.md`). Skills load only when triggered, which is why the OS can hold 44 workflows without slowing anything down.
+**Tier 3: skills.** `.claude/skills/` holds the workflow library. Each skill is a directory containing a `SKILL.md` with a frontmatter `description` and a stepwise body (`.claude/skills/<name>/SKILL.md`). Skills load only when triggered, which is why the OS can hold dozens of workflows without slowing anything down.
 
 The tiers exist to manage one scarce resource: Claude's attention. Broad rules always loaded, deep rules loaded when relevant, workflows loaded when invoked.
+
+**Base vs department packs.** The live skill library starts as the ~21 engine skills every seat needs: memory, routing, quality control, research, client delivery. Department-specific workflows (content production, finance, ops, sales) ship as optional packs in `packs/` - each a bundle of skills, memory scaffolds, and templates with a manifest describing exactly what it adds. `node scripts/install-pack.js <pack>` copies a pack's skills into the live library, wires their routing, and records the install in `packs/installed.json`; uninstall reverses every byte of it. The point is per-seat leanness: a finance seat never carries YouTube packaging skills, and the routing index only ever lists workflows that can actually run. The pack spec lives at `packs/README.md`.
 
 ## 2. The memory system
 

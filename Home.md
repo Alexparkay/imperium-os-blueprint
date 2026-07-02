@@ -24,13 +24,19 @@ Domain map of the whole system. An org-chart view over the folders: nothing here
 | **Tasks + dates** | `memory/kanban.md`, `memory/calendar.md` | (updated automatically after any task) |
 | **Clients** | `clients/<name>/` (STATUS + context/legal/research/deliverables) | client-delivery, blueprint-archive |
 | **Sales / strategy** | `memory/business/`, `context/offers.md` | company-strategy, mastermind-oracle |
-| **Content** | `content-pipeline/` (drafts, published, templates, voice-profile) | content-pipeline, voice-check, content-cascade, video-score |
-| **Research / intel** | `content-pipeline/research/`, `memory/content/creator-blueprints/` | deep-research, youtube-research, trend-intelligence, creator-oracle |
-| **Finance** | `memory/finances.md` (script-computed, provenance required) | finance-audit |
+| **Content** | `content-pipeline/` (drafts, published, templates, voice-profile) | voice-check (base) · content-pipeline, content-cascade, video-score (content-marketing pack) |
+| **Research / intel** | `content-pipeline/research/`, `memory/content/creator-blueprints/` | deep-research, youtube-research (base) · trend-intelligence, creator-oracle (content-marketing pack) |
+| **Finance** | `memory/finances.md`, `memory/finance/` (script-computed, provenance required) | finance-audit, approval-thresholds (finance pack) |
+| **Operations** | `memory/kanban.md`, `memory/business/sops/`, `memory/vendors.md` | meeting-notes-to-actions, sop-writer, vendor-tracker, process-health (ops pack) |
+| **Sales / outreach** | `memory/pipeline.md`, `memory/people/` | cold-email-writer, prospect-intel (sales-crm pack) |
 | **People** | `memory/people.md`, `memory/people/dossiers/` | people work via memory-sync |
 | **Notifications** | `automations/notify/` | notify after long tasks (see notify rule) |
-| **YouTube ingestion** | `automations/youtube/` (Apify only, never scraping) | youtube-research, youtube-chapterize |
+| **YouTube ingestion** | `automations/youtube/` (Apify only, never scraping) | youtube-research (base) · youtube-chapterize (content-marketing pack) |
 | **Live dashboard** | `dashboard/` (build on demand, see its README) | built with the owner once 2+ connectors are live |
+
+## Base vs department packs
+
+The base carries the ~21 engine skills every seat needs (memory, routing, quality, research, delivery). Department capabilities ship as optional packs in `packs/` - content-marketing, finance, ops, sales-crm - installed per seat with `node scripts/install-pack.js <pack>`. Skills marked "(pack)" above exist only after their pack is installed; install state lives in `packs/installed.json`, the full spec in `packs/README.md`.
 
 ## Conventions
 

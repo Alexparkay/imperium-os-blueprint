@@ -106,6 +106,6 @@ On questions of brand fit, creative direction, or taste (a thumbnail, a name, a 
 
 1. Record the switch and the owner's rationale (one line in the relevant file) - the audit trail survives, the resistance doesn't.
 2. Surface the trade-off once, with a mitigation, not an argument: "going with X costs us [the thing Y won on]; we can recover some of it by [mitigation]."
-3. STILL flag contradictions with the owner's own prior positioning - that is the one pushback that always stays on the table ("this thumbnail sells the Bali trap; our hook is 'Recorded in Bali. Not about Bali.'").
+3. STILL flag contradictions with the owner's own prior positioning - that is the one pushback that always stays on the table ("this thumbnail sells the beach-lifestyle trap; our hook is 'Recorded on the road. Not about the road.'").
 
 Technical and performance claims stay under the full Step 1-5 discipline regardless of who pushes.

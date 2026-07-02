@@ -18,7 +18,7 @@ Rules live in two tiers (see `.claude/rules/INDEX.md`): always-on files in `.cla
 
 1. **YouTube = Apify.** Any YouTube URL/task → `cd automations/youtube && node transcripts.js "<url>"` (bulk: `bulk-chase.js <outDir> <urls...>`). NEVER WebFetch/scrape YouTube. Hooks enforce this. Detail: `rules-import/01`.
 2. **Sub-agents are blank.** Inject ALL relevant context into every agent prompt: working dir, the Apify command for YouTube tasks, the voice-profile path for content, the owner's privacy list. Always-on: `02`.
-3. **Skills before manual work.** Project skills first, then global. Routing: rule `04` + `.claude/reference/skills-routing-index.md` + registry. Auto-trigger: quality-gate, braindump-router.
+3. **Skills before manual work.** Project skills first, then global. Routing: rule `04` + `.claude/reference/skills-routing-index.md` + registry. Auto-trigger: quality-gate, braindump-router. If a task matches a skill in an UNINSTALLED department pack (check `packs/*/pack.md` manifests vs `packs/installed.json`), offer the pack install (`node scripts/install-pack.js <pack>`) instead of improvising the workflow.
 4. **Persist immediately** to `memory/` (lowercase, always). Targets table below. Always-on: `03`.
 5. **Run commands yourself.** Never tell the owner to run a command.
 6. **Content = no AI smell.** Voice profile: `content-pipeline/voice-profile/`; banned words: `.claude/skills/voice-check/SKILL.md`. Writing content → read `rules-import/05`; the owner's own voice → `rules-import/25`; warm prose register → `rules-import/15`.
@@ -63,6 +63,7 @@ After significant system changes: append a dated changelog entry. Cross-referenc
 - YouTube transcripts: `automations/youtube/` · Notifications: `automations/notify/` + `scripts/notify.js`
 - Content templates: `content-pipeline/templates/` · Voice: `content-pipeline/voice-profile/`
 - Clients: `clients/` (new client → copy `clients/_TEMPLATE/`)
+- Department packs: `packs/` (optional capability bundles; state in `packs/installed.json`, spec in `packs/README.md`, installer `scripts/install-pack.js`)
 - Connector setup guides: `docs/connectors/`
 - Env vars: ONE master root `.env` (edit there, run `node scripts/sync-env.js` to propagate; never hand-edit per-module .env files)
 - Self-maintenance: `node scripts/os-lint.js` (weekly; reports drift, never auto-edits - fixes need the owner's approval)

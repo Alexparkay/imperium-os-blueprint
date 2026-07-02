@@ -36,7 +36,7 @@ const alwaysOnFiles = [
   ...mdFiles(path.join(ROOT, '.claude', 'rules')).filter(f => f !== 'INDEX.md').map(f => path.join(ROOT, '.claude', 'rules', f)),
   path.join(ROOT, 'context', 'index.md'),
 ];
-const pathRe = /`((?:\.claude|memory|context|clients|automations|scripts|content-pipeline|docs|dashboard)\/[^`\s*]+?)`/g;
+const pathRe = /`((?:\.claude|memory|context|clients|automations|scripts|content-pipeline|docs|dashboard|packs)\/[^`\s*]+?)`/g;
 for (const file of alwaysOnFiles) {
   const text = read(file);
   let m;
@@ -110,6 +110,39 @@ const looseRoot = fs.readdirSync(ROOT).filter(f => {
   return st.isFile() && !f.startsWith('.') && !ROOT_ALLOWLIST.has(f);
 });
 if (looseRoot.length) findings.warn.push(`loose root files (file them or delete; root stays clean): ${looseRoot.join(', ')}`);
+
+// ---------- 7c. Pack integrity (packs/ + installed.json vs live tree) ----------
+const packsDir = path.join(ROOT, 'packs');
+if (fs.existsSync(packsDir)) {
+  let installed = {};
+  try { installed = (JSON.parse(read(path.join(packsDir, 'installed.json')) || '{"packs":{}}').packs) || {}; }
+  catch { findings.critical.push('packs/installed.json is not valid JSON - pack install/uninstall will refuse to run'); }
+  const routingText = read(path.join(ROOT, '.claude', 'reference', 'skills-routing-index.md'));
+  const packDirs = fs.readdirSync(packsDir).filter(d => { try { return fs.statSync(path.join(packsDir, d)).isDirectory(); } catch { return false; } });
+  for (const name of Object.keys(installed)) {
+    if (!packDirs.includes(name)) findings.critical.push(`packs/installed.json lists '${name}' but packs/${name}/ does not exist`);
+  }
+  for (const p of packDirs) {
+    const manifestPath = path.join(packsDir, p, 'pack.md');
+    if (!fs.existsSync(manifestPath)) { findings.warn.push(`pack ${p}: missing pack.md manifest`); continue; }
+    const fmMatch = read(manifestPath).match(/^---\n([\s\S]*?)\n---/);
+    if (!fmMatch) { findings.warn.push(`pack ${p}: pack.md has no YAML frontmatter`); continue; }
+    const skillsMatch = fmMatch[1].match(/^skills:\s*\n((?:[ \t]+-[ \t]+.*\n?)+)/m);
+    const manifestSkills = skillsMatch ? skillsMatch[1].split('\n').map(l => l.replace(/^[ \t]+-[ \t]+/, '').trim()).filter(Boolean) : [];
+    if (!manifestSkills.length) { findings.warn.push(`pack ${p}: pack.md skills list is empty or failed to parse`); continue; }
+    const skillsOnDisk = fs.existsSync(path.join(packsDir, p, 'skills'))
+      ? fs.readdirSync(path.join(packsDir, p, 'skills')).filter(d => { try { return fs.statSync(path.join(packsDir, p, 'skills', d)).isDirectory(); } catch { return false; } })
+      : [];
+    for (const s of manifestSkills) if (!skillsOnDisk.includes(s)) findings.warn.push(`pack ${p}: manifest lists skill '${s}' but packs/${p}/skills/${s}/ does not exist`);
+    for (const s of skillsOnDisk) if (!manifestSkills.includes(s)) findings.warn.push(`pack ${p}: packs/${p}/skills/${s}/ exists but the manifest does not list it`);
+    if (installed[p]) {
+      for (const s of manifestSkills) {
+        if (!fs.existsSync(path.join(ROOT, '.claude', 'skills', s, 'SKILL.md'))) findings.critical.push(`installed pack ${p}: skill '${s}' missing from .claude/skills/ - reinstall or fix packs/installed.json`);
+        if (!routingText.includes(`\`${s}\``)) findings.warn.push(`installed pack ${p}: skill '${s}' not routed in skills-routing-index.md`);
+      }
+    }
+  }
+}
 
 // ---------- 8. Git hygiene ----------
 const status = sh('git status --porcelain');

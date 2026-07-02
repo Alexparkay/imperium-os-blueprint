@@ -56,7 +56,7 @@ A live progress page ([docs/setup-status.html](docs/setup-status.html) - open it
   <img src="docs/assets/architecture.svg" alt="Architecture: you, the brain, and the six organs - context, memory, skills, connectors, self-maintenance" width="100%"/>
 </p>
 
-- **44 skills.** Pre-built workflows for content, research, client delivery, strategy, quality control, and more. Each one triggers automatically when you ask for something it covers.
+- **21 engine skills.** Pre-built workflows every seat needs - memory, research, client delivery, strategy, quality control. Each one triggers automatically when you ask for something it covers. Department-specific workflows live in packs (below), so the base stays lean.
 - **A rule layer.** Enforcement rules that keep output quality high: no AI-sounding writing, no invented numbers, research before claims, disagreement before agreement. The system pushes back when you need it to.
 - **A memory system.** Everything you tell it lands in the right file, immediately. People, decisions, deadlines, finances, ideas. Nothing lives only in a chat window.
 - **Hooks.** Deterministic guardrails that run on every interaction, so the important rules cannot be skipped or forgotten.
@@ -72,10 +72,15 @@ A live progress page ([docs/setup-status.html](docs/setup-status.html) - open it
 | `clients/` | One folder per client engagement. |
 | `content-pipeline/` | Drafts, published work, research, and your voice profile. |
 | `automations/` | The runtime tools, like YouTube research and notifications. |
+| `packs/` | Optional department packs: extra skills installed only where a seat needs them. |
 | `dashboard/` | The spec for your live company dashboard (built with you on request, once 2+ connectors are live - see dashboard/README.md). |
 | `docs/` | Guides, the architecture explainer, and the setup status page. |
 
 Everything else is plumbing. You never need to touch it.
+
+## Department packs
+
+Not every seat needs every workflow, so departments ship as optional packs: **content-marketing** (the full production suite - YouTube packaging, podcast production, LinkedIn, repurposing, trend intel, plus the content templates), **finance** (penny-accurate statement audits and spend-approval thresholds), **ops** (meeting notes to actions, SOPs, vendor tracking, a weekly ops pulse), and **sales-crm** (cold email plus prospect dossiers and a pipeline board). Installing one is a sentence in the chat - the system runs `node scripts/install-pack.js <pack>`, asks the pack's few setup questions, and the new skills route like they were always there. Uninstalling removes every trace. The spec lives at [packs/README.md](packs/README.md).
 
 ## The safety posture
 
