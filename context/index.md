@@ -13,6 +13,8 @@ This file is a **top sheet of pointers**, not a copy. Detail lives in `memory/bu
 
 ## Read order
 
+**0. Persona** - [identity.md](identity.md): the system's name, register, and standing pushbacks (auto-loads with CLAUDE.md; 150-word cap).
+
 **1. Org truth** - `context/org/`, company-wide facts, identical for every seat (mode explainer: [org/README.md](org/README.md)):
 
 - [org/company.md](org/company.md): who {{COMPANY_NAME}} is, ICP, positioning, what we are and are NOT

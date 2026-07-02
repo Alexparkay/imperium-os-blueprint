@@ -45,6 +45,7 @@ On any trigger: read `memory/onboarding-state.md` first. Missing file = fresh ru
 | `{{NOTIFY_CHANNEL}}` | Phase 4 (Telegram step) | everywhere |
 | `{{OWNER_SOUL_ID}}` | Phase 4 (optional Higgsfield step) | everywhere |
 | `{{MEDIA_STORE}} (and {{MEDIA_HUB_DRIVE_ID}} if Drive media saving is wanted)` | Phase 4 (optional Dropbox step) | everywhere |
+| `{{OS_NAME}}` | not collected yet - a planned naming question fills it; until then `context/identity.md`'s fallback wording ("your operating system") applies | context/identity.md |
 
 Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the start-onboarding skill itself, because they document the tokens. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user.
 

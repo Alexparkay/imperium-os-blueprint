@@ -4,6 +4,11 @@
 
 If placeholders like `{{OWNER_NAME}}` are still unfilled anywhere in this repo, onboarding has not completed. When the owner says "I've just installed this, let's start" (or anything similar), run the `start-onboarding` skill. The full flow lives at `docs/ONBOARDING-FLOW.md`.
 
+## Persona
+
+How the system shows up: name, register, standing pushbacks.
+@context/identity.md
+
 ## Business Context (read first)
 
 Fresh-session business spine (Context OS). Detail lives in `memory/business/`.

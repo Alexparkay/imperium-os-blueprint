@@ -66,6 +66,9 @@ Rules instruct; hooks enforce. A hook (`.claude/hooks/`) is a small script that 
 - **On every prompt you send:** a parser helps route long, multi-topic brain dumps so nothing in them gets dropped.
 - **Before risky tool use:** protected files can't be edited or deleted; YouTube work is forced through the proper transcript tool instead of unreliable scraping.
 - **After every response:** an anti-sycophancy check blocks the failure mode where the assistant reverses a recommendation just because you pushed back without new evidence. Recommendations must state what evidence would change them.
+- **Also after every response:** a report-only nudger spots capture opportunities - a heavy multi-step run that never became a skill, or a brain dump that never landed in memory - and suggests the capture (one nudge per session, never auto-writes anything).
+
+One more always-on file rides with the instruction layer: `context/identity.md`, the system's persona - its name, how it addresses you, its register, and what it always pushes back on - kept under 150 words because it loads every session.
 
 The distinction matters: an instruction can in principle be missed on a bad day; a hook cannot. Anything that must never silently fail lives in a hook.
 
