@@ -46,6 +46,8 @@ On any trigger: read `memory/onboarding-state.md` first. Missing file = fresh ru
 | `{{OWNER_SOUL_ID}}` | Phase 4 (optional Higgsfield step) | everywhere |
 | `{{MEDIA_STORE}} (and {{MEDIA_HUB_DRIVE_ID}} if Drive media saving is wanted)` | Phase 4 (optional Dropbox step) | everywhere |
 | `{{OS_NAME}}` | not collected yet - a planned naming question fills it; until then `context/identity.md`'s fallback wording ("your operating system") applies | context/identity.md |
+| `{{OWNER_SOUL_CINEMATIC_ID}}` `{{OWNER_WARDROBE_STYLE}}` `{{OWNER_COLOR_PALETTE}}` `{{OWNER_PHYSIQUE_NOTES}}` `{{OWNER_ACCESSORIES}}` `{{OWNER_AESTHETIC_AVOID}}` `{{OWNER_TEXT_DEFAULTS}}` | Phase 4 (optional Higgsfield step, alongside `{{OWNER_SOUL_ID}}`); dormant if skipped | owner-likeness rule (`rules-import/26`) |
+| `{{BANK_*}}` `{{COMPETITOR_CHANNEL_*}}` | at pack install (`node scripts/install-pack.js <pack>`), by the pack's own setup questions; dormant until then | finance-audit / video-score pack skills |
 
 Replacement passes always exclude `.git/`, `docs/ONBOARDING-FLOW.md` (this file), and the start-onboarding skill itself, because they document the tokens. Every pass ends with a re-grep to confirm zero remaining occurrences of the replaced tokens, and a plain-English files-touched report to the user.
 

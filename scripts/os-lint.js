@@ -104,7 +104,7 @@ const mojiHits = sh(`grep -rl "â€" --include="*.md" context clients memory .c
 if (mojiHits) findings.warn.push(`mojibake (â€/Â) found in: ${mojiHits.split('\n').join(', ')} - fix the file encoding (UTF-8, no BOM)`);
 
 // ---------- 7b. Loose root files (clean-root contract) ----------
-const ROOT_ALLOWLIST = new Set(['README.md', 'LICENSE.md', 'Home.md']);
+const ROOT_ALLOWLIST = new Set(['README.md', 'LICENSE.md', 'Home.md', 'CHANGELOG.md', 'scrub-blacklist.local.json']); // the blacklist lives at the root BY DESIGN (maintainer-local, gitignored; package-check reads it there)
 const looseRoot = fs.readdirSync(ROOT).filter(f => {
   const st = fs.statSync(path.join(ROOT, f));
   return st.isFile() && !f.startsWith('.') && !ROOT_ALLOWLIST.has(f);
@@ -143,6 +143,24 @@ if (fs.existsSync(packsDir)) {
     }
   }
 }
+
+// ---------- 7d. Seed integrity (quick) ----------
+// brain/seed/seed.sql is the single source of sample data; the worker's
+// fixtures mirror it row-for-row (brain/seed/MANIFEST.md). This is the
+// advisory day-to-day alarm - WARN only; the hard gate is package-check.
+try {
+  const { extractUuids, diffUuidSets } = require('./lib/seed-utils');
+  const seedPath = path.join(ROOT, 'brain', 'seed', 'seed.sql');
+  const fixturesPath = path.join(ROOT, 'automations', 'worker', 'lib', 'fixtures.js');
+  if (fs.existsSync(seedPath) && fs.existsSync(fixturesPath)) {
+    const { missing, extra, matched } = diffUuidSets(extractUuids(read(seedPath)), extractUuids(read(fixturesPath)));
+    if (missing.length || extra.length) {
+      findings.warn.push(`seed drift: worker fixtures out of sync with brain/seed/seed.sql (${missing.length} seed UUID(s) missing from fixtures, ${extra.length} fixture UUID(s) not in the seed) - mirror in the same commit per brain/seed/MANIFEST.md; hard gate: node scripts/package-check.js`);
+    } else {
+      findings.info.push(`seed integrity: worker fixtures mirror brain/seed/seed.sql (${matched} UUIDs)`);
+    }
+  }
+} catch (e) { findings.warn.push(`seed integrity check errored: ${e.message}`); }
 
 // ---------- 8. Git hygiene ----------
 const status = sh('git status --porcelain');

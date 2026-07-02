@@ -25,7 +25,7 @@ It's the same system [Imperium Growth](https://imperium-growth.com) runs its own
 
 **1. Get the files.**
 ```
-git clone https://github.com/Alexparkay/imperium-os.git my-company-os
+git clone <the URL from the green Code button above> my-company-os
 ```
 Don't use git? Click the green **Code** button above → **Download ZIP** → extract it somewhere easy, like Documents.
 
@@ -95,7 +95,7 @@ v0.2 was hardened by running two full overnight install simulations against real
 
 ## Support
 
-First line of support is the chat itself: describe what happened in plain English and it will diagnose and fix most things on its own. The five-minute orientation lives at [docs/START-HERE.md](docs/START-HERE.md), the visual map at [docs/system-map.html](docs/system-map.html), and the engineering story at [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+First line of support is the chat itself: describe what happened in plain English and it will diagnose and fix most things on its own. The five-minute orientation lives at [docs/START-HERE.md](docs/START-HERE.md), the visual map at [docs/system-map.html](docs/system-map.html), and the engineering story at [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Release history: [CHANGELOG.md](CHANGELOG.md).
 
 Want it installed for you, wired into your real stack (CRM, accounting, call transcripts, WhatsApp, dashboards), and tuned in person? That's what [Imperium Growth](https://imperium-growth.com) does.
 
