@@ -1,0 +1,20 @@
+{
+  "name": "company-os-worker",
+  "version": "1.0.0",
+  "description": "The OS's dormant worker: webhook intake, hub-and-spoke event router, connectors, and the cockpit /api layer over the company Brain. Boots on fixtures with zero credentials.",
+  "type": "commonjs",
+  "main": "hub.js",
+  "scripts": {
+    "start": "node hub.js",
+    "cron": "node cron.js",
+    "brief:once": "node cron.js --once",
+    "sync:all": "node -e \"require('./hub').route({type:'sync.all'}).then(r=>console.log(JSON.stringify(r,null,2)))\""
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "@supabase/supabase-js": "^2.45.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

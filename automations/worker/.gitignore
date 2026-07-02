@@ -1,0 +1,4 @@
+# Worker runtime artifacts — generated at run time, never source.
+# (node_modules/, package-lock.json and .env* are already ignored
+# by the repo-root .gitignore.)
+.status/

@@ -12,7 +12,7 @@ This is the under-the-hood explainer. You don't need it to use the system; it ex
 
 ## The big picture
 
-The OS is a folder of plain text files plus Claude Code. There is no database, no server, no app to maintain. Claude reads instructions from the folder, acts through its tools (file edits, terminal commands, web access, connected services), and writes what it learns back into the folder. Because everything is text in one place, you can read any of it, version all of it, and move it anywhere.
+The OS is a folder of plain text files plus Claude Code. On day one there is no database to stand up, no server to keep alive, no app to maintain: Claude reads instructions from the folder, acts through its tools (file edits, terminal commands, web access, connected services), and writes what it learns back into the folder. Because everything is text in one place, you can read any of it, version all of it, and move it anywhere. (A database and a server DO ship in the box - the dormant operating layer, section 6 - but they stay inert until you choose to activate them.)
 
 Four ideas make it an operating system rather than a chatbot: a layered instruction system, a memory system, a skill library, and a self-improvement loop. The onboarding measures all four through one model, the Four C's, covered at the end.
 
@@ -82,6 +82,16 @@ Two scripts keep the OS healthy as it grows:
 The loop is: **use the system → notice friction → change a skill or rule → re-run registry + lint → review the diff → commit.** The human review gate is deliberate. The OS proposes its own improvements and fixes mechanical problems, but a person approves changes to how it behaves. Because everything is text under version control, every change is visible and reversible.
 
 This is why the system gets better with use instead of decaying: corrections become rule edits, repeated requests become skills, and the lint catches rot before you feel it.
+
+## 6. The operating layer (dormant modules)
+
+Everything above runs on files alone. Alongside it, the box ships an operating layer for the moment the company wants live operational data - present, documented, runnable on sample data with zero credentials, and activated later with the build team. Three pieces, one contract:
+
+- **The Brain (`brain/`).** A Postgres schema (Supabase) for structured operational data: knowledge documents, an approval queue, an append-only audit log, the daily brief, team activity. Only that universal core ships; the tables for what YOUR company operates on (orders, projects, shipments) are designed at activation as domain extensions following the same conventions. Table names are a contract with every consumer - nothing renames alone.
+- **The worker (`automations/worker/`).** A small Node service: connectors pull data in, ONE event router (hub-and-spoke - agents are stateless and never call each other) processes it, and a `/api/*` layer serves the results. It boots today with zero keys, serving fixtures mirrored from the Brain's seed, and labels every response `"source": "fixtures"` so sample data can never pass as live.
+- **The cockpit contract (`dashboard/README.md`).** Not an app - a spec any dashboard must satisfy: one typed data-source adapter (`DATA_SOURCE=mock|sheets|supabase`), mock data derived only from the seed, a visible "SEED DATA" badge on every non-live surface, and fallback-to-mock instead of blank screens.
+
+**Why ship it dormant instead of leaving it out?** One clone carries everything - no "phase 2 repo" to bolt on later, no version skew between the OS a company started with and the operating layer it activates a quarter in. The contract (table names, endpoint shapes, seed rows) is exercised by the fixtures from day one, so activation changes configuration, not architecture. And safety is by construction rather than by promise: the database ships default-deny (row security forced, zero public policies), the audit log physically rejects edits, and actions touching money, legal, or external comms park in the approval queue for a human - those properties hold before the first credential exists.
 
 ## The Four C's
 

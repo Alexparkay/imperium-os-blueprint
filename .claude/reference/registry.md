@@ -44,9 +44,9 @@ Regenerate: `node scripts/generate-registry.js` · Generated: 2026-07-02
 
 - (none yet - copy clients/_TEMPLATE/ when the first client lands)
 
-## Automations (2 active dirs in automations/, excl. lib/, _archive/)
+## Automations (3 active dirs in automations/, excl. lib/, _archive/)
 
-`notify` · `youtube`
+`notify` · `worker` · `youtube`
 
 ## Warnings (fix these)
 

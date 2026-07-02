@@ -1,38 +1,40 @@
-# Dashboard (build on demand)
+# The Cockpit Contract
 
-This folder is a SPEC, not an app. The dashboard gets built by the OS, with the owner, in chat, once there is real data to show. Building it earlier produces an empty shell that decays; building it on demand produces something the owner actually opens.
+This folder is a CONTRACT, not an app. Any dashboard ("cockpit") built for this OS — by the build team at activation, or by anyone later — MUST satisfy the rules below. The cockpit is a read-only window over the operating layer; the Brain (`brain/`) and the repo's files stay the source of truth.
 
-## Purpose
+Build it on demand, with the owner, once there is real data to show. An empty shell built early decays; a cockpit built against live pipes gets opened.
 
-One screen of live company truth for {{COMPANY_NAME}}: where the pipeline stands, what the money says, what content is moving, what's due. The OS's files (kanban, STATUS.md, finances) stay the source of truth; the dashboard is a read-only window onto them plus whatever connectors are live.
+## 1. One data-source adapter, config-over-code
 
-## When to build it
+All reads go through a SINGLE typed data-source adapter. No component queries a backend directly. The active source is configuration, not code:
 
-After onboarding is complete AND at least 2 data connectors are live (for example: a finance source the scripts can reconcile, plus the clients/ folder in active use, or a content pipeline with real publishing history). Until then, the answer to "how's the business doing" is a chat question, and that's fine.
+```
+DATA_SOURCE=mock | sheets | supabase
+```
 
-## What it shows (v1 scope, 4 widgets max)
+Switching source is an env change and a redeploy — never a refactor. The adapter exposes the same typed interface in every mode; components cannot tell (and must not care) which backend is live.
 
-- **Pipeline:** clients and prospects with stage + next step, read from `clients/*/STATUS.md`
-- **Finances:** the key figures from `memory/finances.md`, each rendered WITH its provenance label; any figure a script didn't compute shows as "needs reconciliation", never as a guess (per the financial-accuracy rule)
-- **Content:** drafts in flight, published this month, next scheduled, from `content-pipeline/` + `memory/calendar.md`
-- **Tasks:** a mirror of `memory/kanban.md` columns
+## 2. `supabase` mode binds to the Brain table contract
 
-## Reference architecture
+In `supabase` mode the adapter reads the five core tables defined in `brain/migrations/0001_core.sql`:
 
-- **Component base (start here):** clone the house admin template `https://github.com/Alexparkay/Imperium-Admin` (public) into this folder:
-  `git clone --depth 1 https://github.com/Alexparkay/Imperium-Admin.git dashboard/<board-name>` then `git remote remove origin` inside it, and add `dashboard/<board-name>/` to the OS's `.gitignore` BEFORE the next backup push - a nested git clone otherwise gets committed as a broken pointer and silently drops out of the backup.
-  Build notes from real installs: replace the root route (it redirects to a template example), override the global metadata title (it says "Imperium Admin" in the browser tab), prefer literal brand hex values over the theme token system for contracted palettes, and ignore the ~25 example dashboard routes.
-- **Default:** Next.js app deployed to Vercel, Supabase (free tier) as the data layer, small sync scripts that parse the repo's markdown into tables on a schedule or on git push
-- **Lighter alternative:** sheet-backed (Google Sheets as the store, a single static page reading it) for owners who don't want another service
-- Read-only first. Editing stays in the repo/chat where the audit trail lives. Write-back is a later phase if ever.
-- Access control from day one: this is company-private data, so password protection or Vercel access protection minimum.
+- `documents` · `approval_queue` · `audit_log` · `daily_brief` · `team_activity`
 
-## How it gets built
+plus any per-deployment domain tables (`0003_<domain>.sql` — orders, listings, shipments, whatever this company operates on). Table and column names are a contract shared with the worker: **never rename on either side without updating the other in the same change.** Access is server-side with the service_role key only; the key never reaches the browser (RLS is default-deny by design — see `brain/README.md`).
 
-The owner says "build my dashboard" in chat. The OS confirms which connectors are live, picks the architecture above, scaffolds the app in this folder, wires the data reads, deploys, and hands back a URL. Each later widget is added the same way: by asking. Treat every dashboard request as a normal deliverable (quality gate applies).
+## 3. Mock mode derives from the seed — and says so, loudly
 
-## What NOT to do
+- Mock data MUST derive from `brain/seed/seed.sql` (the single-seed-source rule, `brain/seed/MANIFEST.md`) — the same rows the worker's fixtures mirror. Inventing mock data in the cockpit is a violation.
+- Every surface showing non-live data MUST render a visible **"SEED DATA"** badge. Not a console log, not a footnote — a badge on the surface itself.
+- **Silent mock data is the named failure mode this contract exists to prevent.** A screen of plausible numbers with no badge will, eventually, be read as truth by someone making a decision.
 
-- Don't pre-build widgets for data that has no live source yet
-- Don't let the dashboard become a second source of truth; if it disagrees with the repo, the repo wins and the sync gets fixed
-- Don't render any financial number the reconciliation scripts didn't produce
+## 4. Fall back, never blank
+
+An unconfigured or unreachable backend falls back to mock mode (badged), never to a blank screen or an unhandled error. Connector state comes from the worker's `/api/connectors` status stamps, so a dead pipe renders as "pipe down since <time>", not as missing data.
+
+## 5. Standing rules
+
+- **Read-only first.** Writes (approving a queue item, adding a note) go through the worker's audited endpoints — never direct table writes from the cockpit.
+- **Financial figures** render only with provenance, per the financial-accuracy rule; anything unverified shows as "needs reconciliation", never a guess.
+- **Access control from day one:** this is company-private data — authentication or platform access protection, minimum.
+- Framework, host, and styling are free choices. The contract governs data flow, not aesthetics.

@@ -32,7 +32,8 @@ Domain map of the whole system. An org-chart view over the folders: nothing here
 | **People** | `memory/people.md`, `memory/people/dossiers/` | people work via memory-sync |
 | **Notifications** | `automations/notify/` | notify after long tasks (see notify rule) |
 | **YouTube ingestion** | `automations/youtube/` (Apify only, never scraping) | youtube-research (base) · youtube-chapterize (content-marketing pack) |
-| **Live dashboard** | `dashboard/` (build on demand, see its README) | built with the owner once 2+ connectors are live |
+| **Live dashboard** | `dashboard/` (the cockpit CONTRACT, see its README) | built with the owner once 2+ connectors are live |
+| **Operating layer (dormant)** | `brain/` (database contract) + `automations/worker/` (hub-and-spoke engine) | runs on fixtures with zero keys; activated with the build team (`docs/connectors/company-brain.md` + `worker.md`) |
 
 ## Base vs department packs
 
