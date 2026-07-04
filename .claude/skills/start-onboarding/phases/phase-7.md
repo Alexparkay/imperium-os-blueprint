@@ -20,7 +20,7 @@ Save the baseline as a dated entry in `memory/system_changelog.md` - this is the
 
 ## 4. First-seat reminder (org-first-seat installs only)
 
-If `org_mode` is `org-first-seat`: remind them, in two sentences, that when the next seat arrives, the company truth in `context/org/` gets promoted to a small shared company folder so every seat stays in sync - a 15-minute install-team job, guide at `docs/connectors/org-sync.md`. Add it to "Notes for next session" in the state file so it can't be forgotten.
+If `org_mode` is `org-first-seat`: remind them, in two sentences, that when the next seat arrives, the install team pre-loads the company truth in `context/org/` onto every seat and the built-in company workspace keeps team knowledge flowing between them - a short install-team job, nothing for them to set up. Add it to "Notes for next session" in the state file so it can't be forgotten.
 
 ## 5. Graduation message
 

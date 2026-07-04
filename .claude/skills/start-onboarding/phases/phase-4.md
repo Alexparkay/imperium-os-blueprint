@@ -8,17 +8,16 @@ The menu lives at `docs/connectors/INDEX.md`: every connector, its plain-English
 
 **Recall their Phase 2 answer** about where they go each week. Then ask one question before starting: **"Who else works in these tools day to day - an assistant, a partner, a team member?"** → `team_users` in the state file.
 
-If someone shares the inbox or pipeline, give the honest answer: each of those people can get their own seat - a separate install of this same system that shares [company]'s context, so five people never hold five drifting versions of the truth. Setting up extra seats is an install-team job (guide: `docs/connectors/org-sync.md`); until then, a second person can sit at this install, and a second machine can pull the same system from the backup. Note anyone who should get a seat in the state file.
+If someone shares the inbox or pipeline, give the honest answer: each of those people can get their own seat - a separate install of this same system that shares [company]'s context through the built-in company workspace, so five people never hold five drifting versions of the truth. Setting up extra seats is an install-team job; until then, a second person can sit at this install. Note anyone who should get a seat in the state file.
 
 ## 2. Build the plan
 
 Present a short plan: "Based on what you told me, here's what I suggest we connect, in order. We'll do them one at a time and test each before moving on."
 
-- **Universal spine first, for every seat:** `github-backup` → `google-workspace`. Benefit sentences are PRE-WRITTEN - use these words or closer; never improvise the intro ("repository", "versioned", "API", "token" are banned in intro sentences):
-  1. `github-backup` - "If your laptop dies tomorrow, your whole system is safe in a private cloud copy, and anything can be rolled back." Guide: `docs/connectors/github-backup.md`.
-  2. `google-workspace` - "I can read your calendar and draft from your email, so 'what does my week look like' just works." Guide: `docs/connectors/google-workspace-gws.md`.
+- **Backup is already handled - say so, don't set it up.** Open with the good news, in these words or closer ("repository", "versioned", "API", "token" are banned in intro sentences): "Your work backs itself up automatically - everything you and I build here is saved privately to your company workspace, so if your laptop dies tomorrow, nothing is lost." No connector, no key, no step.
+- **Universal spine first, for every seat:** `google-workspace` - "I can read your calendar and draft from your email, so 'what does my week look like' just works." Guide: `docs/connectors/google-workspace-gws.md`.
 - **Then the role picks:** open the role card's "Recommended connectors" section and filter it against their Phase 2 answers - only propose what matches where their work actually lives. Each card carries its own pre-written benefit sentences.
-- **Install-team tier:** `org-sync`, `company-brain`, and `worker` are set up WITH the install team, not walked through here. If the plan or the user's answers touch them (multiple seats, live dashboards, always-on automation), name them in one sentence each and record the interest under "Pending items" in the state file (these connectors have no row in the connector table by design - see the exception in `docs/connectors/INDEX.md`) - never attempt the setup solo mid-onboarding.
+- **Install-team tier:** `company-brain` and `worker` are set up WITH the install team, not walked through here. Extra seats (multi-seat sharing) are an install-team job too - the built-in company workspace connects them, nothing to install. If the plan or the user's answers touch these (multiple seats, live dashboards, always-on automation), name them in one sentence each and record the interest under "Pending items" in the state file (these have no row in the connector table by design - see the exception in `docs/connectors/INDEX.md`) - never attempt the setup solo mid-onboarding.
 - Mention the relevant optional connectors in the opening plan summary, not after an hour - past the one-hour mark everything optional gets skipped unheard. If they ask for a connector the catalog doesn't have (social analytics is the most common ask), say so honestly and point at `docs/connectors/not-yet.md` (known gaps + workarounds); log the want in the state file.
 
 ## 3. The loop, for each connector
@@ -38,7 +37,7 @@ Connector setup has natural dead time: whenever the user is off in a browser cre
 
 - The moment you send them to a browser step, immediately: pre-stage the `.env` line the key will land in, pre-fill the connector's state-table row, and have the verification command ready, so the second the key arrives you save + test in one step.
 - If a verification is slow (a first sync, an install, a long fetch), start it as a background task, say "that's running in the background", and move to the NEXT connector's one-sentence intro while it finishes. Report the result the moment it lands.
-- Anything that needs no input from them (background installs, creating folders, seeding files, the GitHub backup push after the token is saved) runs in the background by default while the conversation moves forward.
+- Anything that needs no input from them (background installs, creating folders, seeding files) runs in the background by default while the conversation moves forward.
 - Never make the user watch a progress bar. If they are waiting on you for more than ~30 seconds, say what's happening in one line.
 
 ## 5. Connector-specific placeholder fills

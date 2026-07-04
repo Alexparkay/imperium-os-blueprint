@@ -13,7 +13,7 @@ Rules live in two physical tiers (plus deterministic hook enforcement):
 
 - **always** - file lives in `.claude/rules/` and auto-loads every session (14 files)
 - **import** - file lives in `.claude/rules-import/` and does NOT auto-load. The hard-rules list in `00-engine-core.md` carries the one-line trigger; READ the file when the trigger fires
-- **hook** - deterministic enforcement wired in `.claude/settings.json`: rule 01 (PreToolUse on WebFetch + Agent), rule 08 (MCP deny list), anti-fold (Stop), braindump (UserPromptSubmit), protected files (PreToolUse on Edit/Write), org-sync (SessionStart, rule 32's refresh)
+- **hook** - deterministic enforcement wired in `.claude/settings.json`: rule 01 (PreToolUse on WebFetch + Agent), rule 08 (MCP deny list), anti-fold (Stop), braindump (UserPromptSubmit), protected files (PreToolUse on Edit/Write)
 
 Numbering is inherited from the parent OS, so numbers are sparse. The number is an ID, not a count. Rule 00 is native to this product: it carries the engine-class instructions that used to live in CLAUDE.md (the engine/seed split - see docs/ARCHITECTURE.md, "Engine vs seed files").
 

@@ -12,7 +12,7 @@ Used by Phases 2, 4, and 5 when the seat runs the machine: operations, delivery,
 
 ## Recommended connectors (Phase 4)
 
-After the universal spine (github-backup → google-workspace - calendar and docs matter most for this seat):
+After the universal spine (google-workspace - calendar and docs matter most for this seat; backup is built in, nothing to set up):
 
 - `telegram-notify` - "When a job finishes or something needs a decision, your phone buzzes - no checking back required."
 - `whatsapp-mcp` - offer if vendors or the team run on WhatsApp: "I can search your chats - find what the supplier promised without scrolling." Flag it as the most involved setup; often better finished with the install team.

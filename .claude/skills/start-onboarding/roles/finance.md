@@ -14,7 +14,7 @@ One rule shadows everything on this seat: **figures come from source files and s
 
 ## Recommended connectors (Phase 4)
 
-After the universal spine (github-backup → google-workspace - Sheets is this seat's workbench, so Workspace is near-mandatory):
+After the universal spine (google-workspace - Sheets is this seat's workbench, so Workspace is near-mandatory; backup is built in, nothing to set up):
 
 - `telegram-notify` - "When an audit finishes or something needs your sign-off, your phone buzzes."
 - Not a connector, but set it up in this phase: a **statements drop folder** - "One folder where your bank and provider exports land; I read whatever appears there." (Default `memory/finance/statements/` once the finance pack is in; keep it out of the cloud backup if statements are sensitive - ask.)

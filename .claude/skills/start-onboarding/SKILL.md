@@ -129,7 +129,6 @@ status: in-progress
 ## Connectors
 | Connector | Status | Verified by | Date |
 |---|---|---|---|
-| github-backup | pending | | |
 | google-workspace | pending | | |
 | apify-youtube | pending | | |
 | telegram-notify | pending | | |

@@ -17,12 +17,12 @@ Two calibrations shadow this seat:
 
 ## Recommended connectors (Phase 4)
 
-After the universal spine (github-backup → google-workspace - calendar and inbox are this seat's home ground):
+After the universal spine (google-workspace - calendar and inbox are this seat's home ground; backup is built in, nothing to set up):
 
 - `telegram-notify` - "Your phone buzzes when a task finishes - and [principal]'s can too, if you want results landing with both of you."
 - `whatsapp-mcp` - offer if the principal's world runs on WhatsApp: "I can search the chats - find what was promised, when, by whom, without scrolling." Flag it as the most involved setup; often better finished with the install team.
 - `apify-youtube` - offer only if research or content prep is part of the job.
-- Install-team tier to name if it comes up: `org-sync` if the principal or other staff will get their own seat later.
+- Install-team tier to name if it comes up: extra seats (built-in company workspace sharing) if the principal or other staff will get their own seat later.
 
 ## First tasks + pack (Phase 5)
 

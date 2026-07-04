@@ -14,14 +14,14 @@ Before anything, check for `imperium-user.json` at the workspace root. The deskt
 
 Check two things:
 
-- Is `ORG_CONTEXT_REPO` set in the root `.env`? (Equivalent check: `node scripts/org-sync.js --status` reports a repo URL.)
+- Does `context/seat.md` say the install team set this seat up as part of a multi-seat company?
 - Does `context/org/company.md` contain real content? Template-fresh means: frontmatter still says `status: template`, or the file still contains `{{COMPANY_NAME}}`-style tokens. Real content means a filled company name and one-liner.
 
-**If either says the org layer is already filled** (an install team pre-loaded it, or the org repo is wired): this seat is **joining an existing org**. Record `org_mode: org-joining` for the state file, and greet accordingly - this is the "click into place" moment:
+**If either says the org layer is already filled** (an install team pre-loaded it): this seat is **joining an existing org**. Record `org_mode: org-joining` for the state file, and greet accordingly - this is the "click into place" moment:
 
 > Welcome. Good news: I already know [company]. The company context came pre-loaded - what [company] does, the departments, the vocabulary, the offers. So this hour is about YOU: your seat, your voice, your tools. By the end, I'll know your corner of [company] as well as I know the company itself.
 
-**If the org files are template-fresh and no org repo is set:** record `org_mode: solo-or-first-seat` (Phase 1 works out which) and use the standard welcome below.
+**If the org files are template-fresh and the seat file says nothing about a multi-seat setup:** record `org_mode: solo-or-first-seat` (Phase 1 works out which) and use the standard welcome below.
 
 ## 2. The welcome (standard path - adapt, don't paste robotically)
 

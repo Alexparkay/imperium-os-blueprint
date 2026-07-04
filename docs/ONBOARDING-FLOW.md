@@ -47,7 +47,7 @@ On any trigger: read `memory/onboarding-state.md` first. Missing file = fresh ru
 
 Before the welcome, the skill checks two signals:
 
-1. `ORG_CONTEXT_REPO` set in the root `.env` (equivalently: `node scripts/org-sync.js --status` reports a repo URL).
+1. `context/seat.md` says the install team set this seat up as part of a multi-seat company.
 2. `context/org/company.md` carries real content rather than template state (`status: template` frontmatter or surviving `{{...}}` tokens = template-fresh).
 
 Either signal filled → `org_mode: org-joining`: the OS greets already knowing the company ("this hour is about YOU: your seat, your voice, your tools") and Phase 2 confirms org truth instead of re-interviewing it. Both template-fresh → `org_mode: solo-or-first-seat`, a provisional value that Phase 1 resolves to `solo` or `org-first-seat` (by asking whether other people will get their own seat).
@@ -166,8 +166,8 @@ The single source of truth for tokens that MAY survive onboarding because their 
 ### Phase 4 - Connections (C2)
 
 - **Goal:** the tools they already use are plugged in, one at a time, each verified.
-- **The menu:** `docs/connectors/INDEX.md` - every connector with benefit, key y/n, effort bucket (5 min / 15 min / build team), and per-role relevance. The plan = universal spine (github-backup → google-workspace) + the role card's picks filtered by Phase 2 answers. `org-sync`, `company-brain`, `worker` are named-not-run: install-team engagements.
-- **Opens with the team question** ("who else works in these tools?") → `team_users`. Multi-seat answer is now real: each person can get their own seat sharing org truth via `docs/connectors/org-sync.md` (install team) - noted in state, never improvised solo.
+- **The menu:** `docs/connectors/INDEX.md` - every connector with benefit, key y/n, effort bucket (5 min / 15 min / build team), and per-role relevance. The plan = universal spine (google-workspace; backup is built into Imperium OS, nothing to connect) + the role card's picks filtered by Phase 2 answers. `company-brain`, `worker`, and extra seats are named-not-run: install-team engagements.
+- **Opens with the team question** ("who else works in these tools?") → `team_users`. Multi-seat answer is now real: each person can get their own seat sharing company truth through the built-in company workspace (install team sets seats up) - noted in state, never improvised solo.
 - **Per-connector loop:** pre-written one-sentence benefit (no improvised jargon) → "now, later, or skip?" → follow `docs/connectors/<name>.md` (user does browser steps, Claude does all commands and edits) → run the guide's verification test → update state table + status card → next. Keys pasted in chat go straight to `.env` and are never echoed back.
 - **End-sweep:** project-wide `{{` grep resolved against the defaults table in `phases/phase-4.md`; decisions logged per token.
 - **Failure policy:** two attempts, then `deferred` with a note. May span multiple sessions.
@@ -191,7 +191,7 @@ The single source of truth for tokens that MAY survive onboarding because their 
 ### Phase 7 - Health baseline + graduation
 
 - **Goal:** measured starting point; clean handoff.
-- **Actions:** `project-health` Four C's baseline, **with the real-operator gate: Context capped at 7/10 while the operator sub-onboarding is pending** (cap + unlock stated to the user); baseline saved as the FIRST dated entry in `memory/system_changelog.md` (seat, org mode, scores, connectors, packs - never privacy-list items); `node scripts/os-lint.js` with trivial fixes applied; 5-bullet week-one plan (pending operator item outranks everything); org-first-seat installs get the org-repo reminder (`docs/connectors/org-sync.md`) in Notes for next session; graduation message; state `status: complete`; page to 100% + completion banner.
+- **Actions:** `project-health` Four C's baseline, **with the real-operator gate: Context capped at 7/10 while the operator sub-onboarding is pending** (cap + unlock stated to the user); baseline saved as the FIRST dated entry in `memory/system_changelog.md` (seat, org mode, scores, connectors, packs - never privacy-list items); `node scripts/os-lint.js` with trivial fixes applied; 5-bullet week-one plan (pending operator item outranks everything); org-first-seat installs get the extra-seats reminder (install team pre-loads org truth; the built-in company workspace connects the seats) in Notes for next session; graduation message; state `status: complete`; page to 100% + completion banner.
 - **After graduation:** "onboard [name]" runs the operator sub-onboarding (identity-lite, their voice profile, their view of the seat's boundaries) and lifts the Context cap - spec at the bottom of `phases/phase-7.md`.
 - **Exit criteria:** baseline in the changelog; gate applied if due; lint run; plan on the board; state complete; page at 100%.
 
@@ -202,7 +202,7 @@ The skill edits `docs/setup-status.html` directly. Stable hooks (mirrored in the
 - `li.phase[data-phase="0..7"]` with `data-status="pending|current|done"` and an inner `.fill` div whose inline `width` is the phase progress.
 - `#overall-ring` with inline `style="--p:N"` and `#overall-pct` text (N = completed/8 × 100, rounded to 0/13/25/38/50/63/75/88/100).
 - `#current-focus` one-line text.
-- `.connector[data-name="github-backup|google-workspace|apify-youtube|telegram-notify|dropbox-rclone|mcp-servers|whatsapp-mcp|higgsfield"]` with `data-status="pending|connected|skipped|deferred|optional"` (vocabulary matches the state-file connector table exactly - a parked connector renders as "Deferred", never as a blank chip).
+- `.connector[data-name="google-workspace|apify-youtube|telegram-notify|dropbox-rclone|mcp-servers|whatsapp-mcp|higgsfield"]` with `data-status="pending|connected|skipped|deferred|optional"` (vocabulary matches the state-file connector table exactly - a parked connector renders as "Deferred", never as a blank chip).
 - `.pack[data-name="content-marketing|finance|ops|sales-crm"]` with `data-status="available|recommended|installed|declined"` (set `recommended` when the role card names it, `installed`/`declined` when Phase 5 resolves it).
 - `span[data-field="company-name"]`, `span[data-field="role"]`, `span[data-field="department"]` (all set in Phase 1; owner/solo seats show department "whole company").
 - `#org-mode` - exactly one of: "Solo install", "First seat of your company", "Org seat - shared company truth".
@@ -212,7 +212,7 @@ The skill edits `docs/setup-status.html` directly. Stable hooks (mirrored in the
 ## Maintainer notes
 
 - Keep the interview question wording in the phase files; this doc describes intent, the skill owns the words.
-- If you add a connector: five edits, always together - guide in `docs/connectors/`, row in `docs/connectors/INDEX.md`, row in the state-file template (SKILL.md), card on the status page, mention in the right role cards. **Exception:** install-team-tier connectors (`org-sync`, `company-brain`, `worker`) and `claude-code-install` (a precondition, not a guided step) get the guide + INDEX row only - Phase 4 names them and records interest under the state file's "Pending items"; state-file rows and status-page cards are for guided connectors.
+- If you add a connector: five edits, always together - guide in `docs/connectors/`, row in `docs/connectors/INDEX.md`, row in the state-file template (SKILL.md), card on the status page, mention in the right role cards. **Exception:** install-team-tier connectors (`company-brain`, `worker`) and `claude-code-install` (a precondition, not a guided step) get the guide + INDEX row only - Phase 4 names them and records interest under the state file's "Pending items"; state-file rows and status-page cards are for guided connectors.
 - If you add a role card: add it to the card map in SKILL.md and here, and give it all three sections (seat interview, connectors, first tasks + pack).
 - If you add a pack: it needs a status-page card, a row in the state file's Packs section, and a home in at least one role card's recommendation logic.
 - The quality bar for every user-facing sentence in this flow: a smart non-technical operator can act on it without a call.

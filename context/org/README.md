@@ -18,14 +18,17 @@ One person, one install. These files are written locally during onboarding Phase
 
 ## Mode 2: ORG MODE (multiple seats, one company)
 
-The buyer is a company owner; each seat is a head of department running their own install. All seats need the same company truth, so this directory stops being locally owned and becomes a **read-only mirror of a private company "org context repo"** (a small git repository the install team creates, one per company - setup guide: `docs/connectors/org-sync.md`).
+The buyer is a company owner; each seat is a head of department running their own install. All seats need the same company truth, so the install team pre-loads this directory identically on every seat at setup and keeps it aligned through the company workspace backend - there is nothing for a seat to configure.
 
 The rules in org mode (enforced by `.claude/rules-import/32-org-context.md`):
 
-- **Each seat pulls, never pushes.** `scripts/org-sync.js` refreshes this directory from the org repo (a SessionStart hook runs it automatically when `ORG_CONTEXT_REPO` is set in the root `.env`).
-- **Seats never edit these files directly.** A local edit here will be flagged by the sync guard and will block the next pull until resolved.
-- **Changes propose upward.** A seat that spots wrong or missing org truth writes a proposal to `memory/org-proposals/` (convention: `memory/org-proposals/README.md`). The org admin reviews and merges it into the org repo; the change reaches every seat on their next sync.
+- **Seats never edit these files directly.** A local edit desyncs this seat from every other seat.
+- **Changes propose upward.** A seat that spots wrong or missing org truth writes a proposal to `memory/org-proposals/` (convention: `memory/org-proposals/README.md`). The org admin reviews it; the install team rolls the accepted change out to every seat.
+
+## Related: context/team/ (any mode)
+
+Day-to-day team knowledge flows separately, and automatically: anything a seat shares via "Share something with your team" lands read-only in every seat's `context/team/`, synced from the company workspace by Imperium OS itself. Never edit `context/team/` - share through the panel instead.
 
 ## Which mode am I in?
 
-Run `node scripts/org-sync.js --status`. "Not configured" means single-seat; a repo URL means org mode.
+Check `context/seat.md` - the install team records the seat setup there. Pre-loaded real content in this directory on first launch also means org mode.

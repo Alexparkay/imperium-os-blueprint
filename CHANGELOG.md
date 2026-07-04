@@ -2,6 +2,12 @@
 
 All notable changes to Imperium OS. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows [SemVer](https://semver.org/). Versions 0.1.0-0.2.1 are donor lineage (pre-repo, no dates recorded); everything under Unreleased landed in this repository on 2026-07-02.
 
+## [1.1.0] - 2026-07-04
+
+### Removed
+
+- **GitHub connectors retired - backup and team sharing are now built into Imperium OS.** The desktop app saves each seat's knowledge folders to the company's own workspace backend (one Supabase project per company, RLS-scoped per seat) and pulls shared team contributions read-only into `context/team/`. Removed: `docs/connectors/github-backup.md`, `docs/connectors/org-sync.md`, `scripts/org-sync.js`, the org-sync SessionStart hook, the github-backup connector row/card/state entries. `context/org/` in org mode is now pre-loaded and kept aligned by the install team (propose-upward flow via `memory/org-proposals/` unchanged); rule 32 extended to cover the server-owned `context/team/`.
+
 ## [1.0.0] - 2026-07-02
 
 ### Added

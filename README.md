@@ -61,7 +61,7 @@ A live progress page ([docs/setup-status.html](docs/setup-status.html) - open it
 - **A memory system.** Everything you tell it lands in the right file, immediately. People, decisions, deadlines, finances, ideas. Nothing lives only in a chat window.
 - **Hooks.** Deterministic guardrails that run on every interaction, so the important rules cannot be skipped or forgotten.
 - **A self-improvement loop.** A registry of every skill and rule, plus a lint tool that finds drift, dead paths, and stale config. You review, it fixes.
-- **Connectors.** Step-by-step guides for plugging in GitHub backup, Google Workspace, YouTube research, Telegram notifications, and optional extras - each written for someone who has never opened a terminal, each verified with a real test before it counts as connected. (What we don't have yet, honestly listed: [docs/connectors/not-yet.md](docs/connectors/not-yet.md).)
+- **Connectors.** Step-by-step guides for plugging in Google Workspace, YouTube research, Telegram notifications, and optional extras (workspace backup and team sharing are built into Imperium OS - no connector needed) - each written for someone who has never opened a terminal, each verified with a real test before it counts as connected. (What we don't have yet, honestly listed: [docs/connectors/not-yet.md](docs/connectors/not-yet.md).)
 
 ## The folder, at a glance
 

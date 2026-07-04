@@ -71,9 +71,10 @@ The extractor must enforce the same (path-traversal guard).
 
 ## 5. Multi-seat / org wiring
 
-- Shared company truth = a private org-context repo (see `docs/connectors/org-sync.md`).
-  The install team creates it and sets `ORG_CONTEXT_REPO` in the seat's `.env`;
-  the SessionStart hook keeps `context/org/` mirrored read-only.
+- Shared company truth = the company workspace backend built into Imperium OS
+  (one Supabase project per company; see the fork's imperium/company-backend/).
+  The install team pre-loads `context/org/` on every seat; team contributions
+  arrive read-only in `context/team/` automatically.
 - Structured operational data = the Brain (`brain/README.md`), one per company,
   on the company's own database account.
 - Seat identity for the org repo: install-team-provisioned accounts are acceptable

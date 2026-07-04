@@ -12,7 +12,7 @@ Used by Phases 2, 4, and 5 when the seat runs the company's audience-facing work
 
 ## Recommended connectors (Phase 4)
 
-After the universal spine (github-backup → google-workspace):
+After the universal spine (google-workspace; backup is built in, nothing to set up):
 
 - `apify-youtube` - "Paste any YouTube link and I'll have read the whole video before you finish your coffee - competitor breakdowns and research on tap." Near-mandatory for this seat.
 - `telegram-notify` - "Your phone buzzes when a research job or draft is ready, even when you're away from the desk."

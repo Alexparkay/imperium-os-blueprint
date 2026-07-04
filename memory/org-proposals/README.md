@@ -37,9 +37,9 @@ The diff-style block is the point: the org admin should be able to apply the cha
 
 ## Lifecycle (v1 - honest, no network magic)
 
-1. The seat writes the proposal file here. `node scripts/org-sync.js --propose <file>` validates it and restates this flow.
+1. The seat writes the proposal file here, following the diff-style format above.
 2. The proposal reaches the org admin out-of-band (this repo's normal git push backs it up; the admin is told it exists - a message, the weekly review, however the company communicates).
-3. The org admin reviews and, if accepted, applies the change to the **org context repo**.
+3. The org admin reviews and, if accepted, has the install team roll the change out to every seat's `context/org/`.
 4. Every seat receives the change on its next sync. When this seat sees the change land in `context/org/`, move the proposal file into a `merged/` subfolder here (or delete it if declined - note why in the file first).
 
 Until a proposal is merged, the fact it carries is UNCONFIRMED: cite it as "proposed, awaiting org admin" and keep answering from the current `context/org/` truth.

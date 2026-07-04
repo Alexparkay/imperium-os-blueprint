@@ -14,12 +14,12 @@ Used by Phases 2, 4, and 5 when `user_role_type` is `owner` or `solo`. The owner
 
 ## Recommended connectors (Phase 4)
 
-After the universal spine (github-backup → google-workspace):
+After the universal spine (google-workspace; backup is built in, nothing to set up):
 
 - `telegram-notify` - "Your phone buzzes with the result when I finish a job, even when you're away from the desk."
 - `apify-youtube` - offer if research or content showed up in their week: "Paste any YouTube link and I'll have read the whole video before you finish your coffee."
 - `whatsapp-mcp` - offer if the business runs on WhatsApp: "I can search your chats - find what a client said last week without scrolling." Flag it honestly as the most involved setup; often better finished with the install team.
-- Install-team tier to name (one sentence each, never walk through): `org-sync` if anyone else will get a seat; `company-brain` + `worker` if they want live dashboards or work happening between conversations.
+- Install-team tier to name (one sentence each, never walk through): extra seats (built-in company workspace sharing) if anyone else will get a seat; `company-brain` + `worker` if they want live dashboards or work happening between conversations.
 
 ## First tasks + pack (Phase 5)
 
